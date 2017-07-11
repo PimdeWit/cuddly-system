@@ -1,8 +1,8 @@
-import '../../../styles/dom/dom.scss';
+import '../../../styles/ui/ui.scss';
 
 export const WRAPPER_CENTERED_CLASS = 'wrapper-centered';
 
-class DOM {
+class UI {
 	constructor(parameters) {
     this.container = document.getElementById('app') || document.body;
     this.pixelRatio = window.devicePixelRatio;
@@ -54,4 +54,4 @@ class DOM {
 }
 
 
-export default DOM;
+export default UI;

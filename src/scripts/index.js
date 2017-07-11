@@ -5,9 +5,9 @@ import Boot from './core/boot/base';
 
 
 class Game {
-	constructor() {
+  constructor() {
 		this.boot = null;
-	}
+  }
 
 
 	init() {

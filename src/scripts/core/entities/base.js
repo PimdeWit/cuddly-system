@@ -19,5 +19,9 @@ class Entity {
 		this._health = health;
 	}
 
+
+  render() {
+  }
+
 }
 export default Entity;

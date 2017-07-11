@@ -1,18 +1,19 @@
 import CONSTANTS from '../../modules/constants';
 
+const DEFAULT_MOVE = 'default-move';
+
 class Attack {
-	constructor(parameters) {
-		/** @type {String} */
-		this._initiator = parameters.initiator;
+  /**
+   * 
+   * @param {String} initiator The attacker.
+   * @param {String} target The victim.
+   * @param {String} move The attack move used.
+   */
+	constructor(initiator, target, move = DEFAULT_MOVE) {
+		this._initiator = initiator;
+		this._target = target;
+		this._move = move;
 
-		/** @type {String} */
-		this._target = parameters.target;
-
-		/** @type {String} */
-		this._move = parameters.move;
-
-		if (!this._initiator) throw Error('No attacker specified');
-		if (!this._target) throw Error('No target specified');
 
 		this._setup();
 	}
