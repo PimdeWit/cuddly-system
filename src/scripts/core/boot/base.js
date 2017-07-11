@@ -5,6 +5,7 @@ class Boot {
 		this._startup = new Startup();
 	}
 
+
 	showStartup() {
 		this._startup.init();
 	}

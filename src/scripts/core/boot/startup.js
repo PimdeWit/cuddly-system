@@ -5,11 +5,14 @@ class Startup {
 		console.log('Startup constructor');
 	}
 
+
 	init() {
-		this.canvas = new Canvas({
-			id: 'startup-canvas',
-			className: 'startup-canvas'
-		});
+    this.canvas = new Canvas('startup-canvas', 'startup-canvas', 400, 400);
 	}
+
+
+  _addEventListeners() {
+
+  }
 }
 export default Startup;

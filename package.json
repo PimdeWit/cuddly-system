@@ -16,6 +16,7 @@
     "HMR"
   ],
   "dependencies": {
+    "pepjs": "^0.4.3"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.6",

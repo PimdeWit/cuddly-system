@@ -1,41 +1,34 @@
-import CONST_CANVAS from '../../constants/dom/canvas';
-import DOM from './base';
+import DOM, {WRAPPER_CENTERED_CLASS} from './base';
+
+const MANDATORY_CLASS = 'game-canvas';
+const DEFAULT_WIDTH = 500;
+const DEFAULT_HEIGHT = 500;
 
 class Canvas extends DOM {
-	constructor(parameters) {
+  /**
+   * 
+   * @param {String} id 
+   * @param {String} className 
+   * @param {Number} width 
+   * @param {Number} height 
+   */
+	constructor(id, className, width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT) {
     super();
 
-    this.scale = window.devicePixelRatio;
+    let wrapper = this._createWrapper(WRAPPER_CENTERED_CLASS);
+    let canvas = this._createElement('canvas', className);
 
-    this.init(parameters);
-	}
+    canvas.id = id;
+    canvas.classList.add(MANDATORY_CLASS);
 
-  init(parameters) {
-    const wrapper = this._createWrapper(this.CONST_WRAPPER.CENTERED);
-    const canvas = this._createElement('canvas', parameters.className);
-
-    const width = this._getWidth(parameters.width);
-    const height = this._getHeight(parameters.height);
-
-    if (parameters.id) canvas.id = parameters.id;
-    canvas.classList.add(CONST_CANVAS.BASE_CLASS);
+    canvas.width = width * this.pixelRatio;
+    canvas.height = height * this.pixelRatio;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
 
     this._appendElement(wrapper, canvas);
-    this._appendElement(document.body, wrapper);
-
-    canvas.width = width * this.scale;
-    canvas.style.width = width;
-
-    canvas.height = height * this.scale;
-    canvas.style.height = height;
-  }
-
-  _getWidth(width = CONST_CANVAS.DEFAULT_WIDTH) {
-    return width;
-  }
-
-  _getHeight(height = CONST_CANVAS.DEFAULT_HEIGHT) {
-    return height;
-  }
+    this._appendElement(this.container, wrapper);
+	}
 }
+
 export default Canvas;

@@ -1,19 +1,18 @@
 import '../../../styles/dom/dom.scss';
-import CONST_WRAPPER from '../../constants/dom/wrapper';
+
+export const WRAPPER_CENTERED_CLASS = 'wrapper-centered';
 
 class DOM {
 	constructor(parameters) {
-		console.log('DOM constructor');
-		this.CONST_WRAPPER = CONST_WRAPPER;
-		this.elements = null;
+    this.container = document.getElementById('app') || document.body;
+    this.pixelRatio = window.devicePixelRatio;
+		this.elements = {};
 	}
 
-	init() {
-	}
 
 	/**
 	 * Create a wrapper.
-	 * @param {String|undefined} className 
+	 * @param {String|undefined} className
 	 * @return {HTMLElement}
 	 * @private
 	 */
@@ -21,22 +20,38 @@ class DOM {
 		return this._createElement('div', className);
 	}
 
+
 	/**
 	 * Create am element
-	 * @param {String} tagName 
-	 * @param {String|undefined} className
+	 * @param {String} tagName The tagname of the element.
+	 * @param {String|undefined} className The classname
 	 * @return {HTMLElement}
 	 * @private
 	 */
 	_createElement(tagName = 'div', className) {
-		const element = document.createElement(tagName);
-		if (className) element.classList.add(className);
+		let element = document.createElement(tagName);
+
+		if (className) {
+      element.classList.add(className);
+    }
 
 		return element;
 	}
 
+
+  /**
+   * @param {HTMLElement} parent The destination element.
+   * @param {HTMLElement} element This element will get appended to parent.
+   * @private
+   */
 	_appendElement(parent, element) {
 		parent.appendChild(element);
+
+    if (element.id) {
+      this.elements[element.id] = element.id;
+    }
 	}
 }
+
+
 export default DOM;

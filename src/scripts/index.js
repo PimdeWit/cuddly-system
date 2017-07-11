@@ -9,6 +9,7 @@ class Game {
 		this.boot = null;
 	}
 
+
 	init() {
 		this.boot = new Boot();
 		this.boot.showStartup();
