@@ -1,4 +1,4 @@
-import UI, {WRAPPER_CENTERED_CLASS} from '../base';
+import UI, {WRAPPER_CENTERED_CLASS} from '../index';
 
 const MANDATORY_CLASS = 'game-canvas';
 const HIDDEN_CLASS = 'game-canvas--hidden';
