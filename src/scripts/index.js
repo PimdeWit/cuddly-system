@@ -8,22 +8,22 @@ import Loader from './loaders/index';
 class Game {
   constructor() {
     this.loader = null;
-		this.boot = null;
+    this.boot = null;
   }
 
 
-	init() {
-		this.boot = new Boot();
+  init() {
+    this.boot = new Boot();
     this.boot.showStartup();
-    
+
     this.loader = new Loader();
     this.loader.load('/images/1234.jpg');
     this.loader.load('/images/1234.png');
     this.loader.load('/images/1234.pdf');
-	}
+  }
 }
 
 window.onload = () => {
-	var app = new Game();
-	app.init();
+  const app = new Game();
+  app.init();
 };

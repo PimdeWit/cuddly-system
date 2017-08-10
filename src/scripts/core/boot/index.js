@@ -1,12 +1,13 @@
 import Startup from './modules/startup';
 
 class Boot {
-	constructor(parameters) {
-	}
+  constructor(parameters) {
+  }
 
 
-	showStartup() {
-		this._startup = new Startup();
-	}
+  showStartup() {
+    this._startup = new Startup();
+  }
 }
+
 export default Boot;

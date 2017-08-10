@@ -8,15 +8,15 @@ const DEFAULT_HEIGHT = 500;
 
 class Canvas extends UI {
   /**
-   * 
+   *
    * @param {String} id The canvas ID.
    * @param {String} className Classname for the canvas. (OPTIONAL)
    * @param {Number} width The canvas width. (OPTIONAL) Defaults to 500.
    * @param {Number} height The canvas height. (OPTIONAL) Defaults to 500
    * @param {Boolean} hidden Set to true to hide the canvas on creation.
    */
-	constructor(id, className, width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT,
-      hidden = false) {
+  constructor(id, className, width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT,
+              hidden = false) {
     super();
 
     this.wrapper = this._createWrapper(WRAPPER_CENTERED_CLASS);
@@ -37,7 +37,7 @@ class Canvas extends UI {
     this.element.classList.add(MANDATORY_CLASS);
 
     this._isRendered = this._setReady();
-	}
+  }
 
   get rendered() {
     return this._isRendered;

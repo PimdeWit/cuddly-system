@@ -10,14 +10,14 @@ class Entity {
    * @param {Number} strength 
    * @param {Number} health 
    */
-	constructor(id, firstName, lastName, level = 1, strength = 6, health = 26) {
-		this._id = id;
-		this._firstName = firstName;
-		this._lastName = lastName;
-		this._level = level;
-		this._strength = strength;
-		this._health = health;
-	}
+  constructor(id, firstName, lastName, level = 1, strength = 6, health = 26) {
+    this._id = id;
+    this._firstName = firstName;
+    this._lastName = lastName;
+    this._level = level;
+    this._strength = strength;
+    this._health = health;
+  }
 
 
   render() {

@@ -1,35 +1,56 @@
-const IMAGE_EXTENSIONS = ['jpg', 'png', 'webp'];
-const VIDEO_EXTENSIONS = ['mp4', 'ogg', 'webm'];
+const LOADERS = [
+  {
+    constructor: ImageLoader,
+    mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+  },
+
+  {
+    constructor: VideoLoader,
+    mimeTypes: ['video/mp4', 'video/ogg', 'video/webm'],
+  },
+];
 
 class Loader {
-	constructor(parameters) {
+  constructor() {
     this.loaded = [];
-
-    this.extensionChecker = new RegExp(/\.[0-9a-z]+$/i);
   }
   
+  /**
+   * @param {string} path 
+   * @return {Promise<ImageLoader|VideoLoader>}
+   */
   load(path) {
 
-    this._fetchFile(path);
+    return this._fetchFile(path);
   }
 
   _fetchFile(path) {
-    fetch(path).then(response => {
-      return response.blob();
-    }).then(blob => {
-      this._checkFileType(blob.type);
-    })
+    return new Promise((resolve, reject) => {
+      fetch(path).then(response => {
+        return response.blob();
+
+      }).then(blob => {
+        const loader = this._getLoaderForMimeType(blob.type);
+
+        const loaderInstance = new loader(path);
+
+        resolve(loaderInstance);
+
+      });
+
+    });
+
   }
 
-  _checkFileType(type) {
-    console.log(type);
-    console.log(type.match(this.extensionChecker));
-  
-    for (var i = IMAGE_EXTENSIONS.length - 1; i >= 0; i--) {
+  _getLoaderForMimeType(mimeType) {
+    for(let i = 0; i < LOADERS.length; i ++) {
+      if(loaderConfig.mimeTypes.indexOf(mimeType) > -1) {
+        return loaderConfig.constructor;
+
+      }
+
     }
 
-    for (var i = VIDEO_EXTENSIONS.length - 1; i >= 0; i--) {
-    }
   }
 }
 
