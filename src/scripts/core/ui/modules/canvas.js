@@ -10,7 +10,7 @@ class Canvas extends UI {
   /**
    *
    * @param {String} id The canvas ID.
-   * @param {String} className Classname for the canvas. (OPTIONAL)
+   * @param {String} className Class name for the canvas. (OPTIONAL)
    * @param {Number} width The canvas width. (OPTIONAL) Defaults to 500.
    * @param {Number} height The canvas height. (OPTIONAL) Defaults to 500
    * @param {Boolean} hidden Set to true to hide the canvas on creation.
@@ -95,6 +95,7 @@ class Canvas extends UI {
    */
   dispose() {
     this.element.remove();
+    this.element = null;
   }
 }
 

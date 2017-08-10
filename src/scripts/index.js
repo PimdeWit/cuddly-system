@@ -2,7 +2,7 @@ import '../styles/main.scss';
 
 import '../styles/main.scss';
 import Boot from './core/boot/index';
-import Loader from './loaders/index';
+// import Loader from './loaders/index';
 
 
 class Game {
@@ -14,12 +14,11 @@ class Game {
 
   init() {
     this.boot = new Boot();
-    this.boot.showStartup();
 
-    this.loader = new Loader();
-    this.loader.load('/images/1234.jpg');
-    this.loader.load('/images/1234.png');
-    this.loader.load('/images/1234.pdf');
+    // this.loader = new Loader();
+    // this.loader.load('/images/1234.jpg');
+    // this.loader.load('/images/1234.png');
+    // this.loader.load('/images/1234.pdf');
   }
 }
 
