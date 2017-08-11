@@ -1,7 +1,6 @@
 import '../styles/main.scss';
 
-import '../styles/main.scss';
-import Boot from './core/boot/index';
+import Boot from './boot/index';
 // import Loader from './loaders/index';
 
 

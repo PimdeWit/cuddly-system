@@ -5,7 +5,7 @@ class Startup {
   constructor() {
     this.canvas = new Canvas('startup', 'startup', 400, 400, true);
 
-    this.canvas.rendered.then(() => this.canvas.show());
+    this.canvas.rendered.then(() => this.canvas.hidden = false);
   }
 }
 export default Startup;

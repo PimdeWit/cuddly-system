@@ -1,23 +1,10 @@
-import '../../../styles/ui/ui.scss';
-
 export const WRAPPER_CENTERED_CLASS = 'wrapper-centered';
 
 class UI {
-  constructor(parameters) {
+  constructor() {
     this.container = document.getElementById('app') || document.body;
     this.pixelRatio = window.devicePixelRatio;
     this.elements = {};
-  }
-
-
-  /**
-   * Create a wrapper.
-   * @param {!String} className
-   * @return {HTMLElement}
-   * @private
-   */
-  _createWrapper(className) {
-    return this._createElement('div', className);
   }
 
 
@@ -26,9 +13,10 @@ class UI {
    * @param {String} tagName The tagname of the element.
    * @param {!String} className The classname
    * @return {HTMLElement}
-   * @private
+   * @memberof UI
+   * @static
    */
-  _createElement(tagName = 'div', className) {
+  static createElement(tagName = 'div', className) {
     let element = document.createElement(tagName);
 
     if (className) {
@@ -40,16 +28,14 @@ class UI {
 
 
   /**
+   * @memberof UI
    * @param {HTMLElement} parent The destination element.
    * @param {HTMLElement} element This element will get appended to parent.
    * @private
+   * @static
    */
-  _appendElement(parent, element) {
+  static appendElement(parent, element) {
     parent.appendChild(element);
-
-    if (element.id) {
-      this.elements[element.id] = element.id;
-    }
   }
 }
 

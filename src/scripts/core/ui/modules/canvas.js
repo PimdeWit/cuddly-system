@@ -1,10 +1,9 @@
+import '../../../../styles/modules/startup.scss';
 import UI, {WRAPPER_CENTERED_CLASS} from '../index';
 
-const MANDATORY_CLASS = 'game-canvas';
-const HIDDEN_CLASS = 'game-canvas--hidden';
-
+const HIDDEN_ATTRIBUTE = 'hidden';
 const DEFAULT_WIDTH = 500;
-const DEFAULT_HEIGHT = 500;
+const DEFAULT_HEIGHT = 800;
 
 class Canvas extends UI {
   /**
@@ -19,24 +18,51 @@ class Canvas extends UI {
               hidden = false) {
     super();
 
-    this.wrapper = this._createWrapper(WRAPPER_CENTERED_CLASS);
-    this.element = this._createElement('canvas', className);
+    this._bindFunctions();
 
-    this.hidden = hidden;
+    this.wrapper = UI.createElement('div', WRAPPER_CENTERED_CLASS);
+    this.element = UI.createElement('canvas', className);
 
     this.width = width;
     this.height = height;
 
-    this.resize();
-
-    if (this.hidden) {
-      this.hide();
-    }
+    this.hidden = hidden;
 
     this.element.id = id;
-    this.element.classList.add(MANDATORY_CLASS);
 
     this._isRendered = this._setReady();
+  }
+
+  _bindFunctions() {
+    const resizeFn = this._resize.bind(this);
+    this.__resizeTimeout = null;
+    this._resize = () => {
+      clearTimeout(this.__resizeTimeout);
+
+      this.__resizeTimeout = setTimeout(resizeFn, 0);
+
+    };
+
+  }
+
+  get hidden() {
+    return this._hidden;
+
+  }
+
+  set hidden(value) {
+    this._hidden = value;
+
+    console.log(this._hidden);
+
+    if (value) {
+      this.element.setAttribute(HIDDEN_ATTRIBUTE, '');
+
+    } else {
+      this.element.removeAttribute(HIDDEN_ATTRIBUTE);
+
+    }
+
   }
 
   get rendered() {
@@ -48,45 +74,44 @@ class Canvas extends UI {
    */
   _setReady() {
     return new Promise((resolve, reject) => {
-      this._appendElement(this.wrapper, this.element);
-      this._appendElement(this.container, this.wrapper);
+      UI.appendElement(this.wrapper, this.element);
+      UI.appendElement(this.container, this.wrapper);
 
       requestAnimationFrame(() => resolve());
     });
   }
 
+  set width(value) {
+    this._width = value;
+    this._resize();
+  }
+
+  get width() {
+    return this._width;
+  }
+
+  set height(value) {
+    this._height = value;
+    this._resize();
+  }
+
+  get height() {
+    return this._height;
+  }
+
 
   /**
    * Resize the canvas.
-   * @param {Number} width Defaults to stored width.
-   * @param {Number} height Defaults to stored height.
+   * @private
    */
-  resize(width = this.width, height = this.height) {
-    if (width !== this.width) this.width = width;
-    if (height !== this.height) this.height = height;
+  _resize() {
+    const width = this._width === null ? DEFAULT_WIDTH : this._width;
+    const height = this._height === null ? DEFAULT_HEIGHT : this._height;
 
     this.element.width = width * this.pixelRatio;
     this.element.height = height * this.pixelRatio;
     this.element.style.width = `${width}px`;
     this.element.style.height = `${height}px`;
-  }
-
-
-  /**
-   * Visually hide the canvas.
-   */
-  hide() {
-    this.element.classList.add(HIDDEN_CLASS);
-    this.hidden = true;
-  }
-
-
-  /**
-   * Visually show the canvas.
-   */
-  show() {
-    this.element.classList.remove(HIDDEN_CLASS);
-    this.hidden = false;
   }
 
 
