@@ -13,11 +13,11 @@ body {
   padding: 0;
   margin: 0;
 
-  color: #fff;
-
   background: {
     color: $color-background;
   }
+
+  color: #fff;
 
   font-family: $font;
 
@@ -27,9 +27,10 @@ body {
 
 #app {
 
+  display: flex;
+
   position: relative;
 
-  display: flex;
   align-items: center;
   justify-content: center;
 
@@ -40,8 +41,8 @@ body {
   background-color: $color-background;
 
   transition: {
-    duration: 2s;
     property: background-color;
+    duration: 2s;
     timing-function: $easing;
   }
 
