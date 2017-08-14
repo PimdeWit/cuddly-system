@@ -1,7 +1,6 @@
-import '../../../../styles/modules/startup.scss';
-import UI, {WRAPPER_CENTERED_CLASS} from '../index';
+import UI from '../index';
+import UTILITY_ATTRIBUTES from '../../constants/utilityAttributes';
 
-const HIDDEN_ATTRIBUTE = 'hidden';
 const DEFAULT_WIDTH = 500;
 const DEFAULT_HEIGHT = 800;
 
@@ -20,8 +19,8 @@ class Canvas extends UI {
 
     this._bindFunctions();
 
-    this.wrapper = UI.createElement('div', WRAPPER_CENTERED_CLASS);
-    this.element = UI.createElement('canvas', className);
+    this.wrapper = UI._createElement('div', UTILITY_ATTRIBUTES.POS_CENTERED);
+    this.element = UI._createElement('canvas', className);
 
     this.width = width;
     this.height = height;
@@ -45,6 +44,10 @@ class Canvas extends UI {
 
   }
 
+  /**
+   * Checks if the canvas element is visually hidden in the document.
+   * @returns {*}
+   */
   get hidden() {
     return this._hidden;
 
@@ -56,15 +59,19 @@ class Canvas extends UI {
     console.log(this._hidden);
 
     if (value) {
-      this.element.setAttribute(HIDDEN_ATTRIBUTE, '');
+      this.element.setAttribute(UTILITY_ATTRIBUTES.HIDDEN, '');
 
     } else {
-      this.element.removeAttribute(HIDDEN_ATTRIBUTE);
+      this.element.removeAttribute(UTILITY_ATTRIBUTES.HIDDEN);
 
     }
 
   }
 
+  /**
+   * Checks if the canvas element is rendered in the DOM.
+   * @returns {Boolean}
+   */
   get rendered() {
     return this._isRendered;
   }
@@ -74,8 +81,8 @@ class Canvas extends UI {
    */
   _setReady() {
     return new Promise((resolve, reject) => {
-      UI.appendElement(this.wrapper, this.element);
-      UI.appendElement(this.container, this.wrapper);
+      UI._appendElement(this.wrapper, this.element);
+      UI._appendElement(this.container, this.wrapper);
 
       requestAnimationFrame(() => resolve());
     });

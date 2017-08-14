@@ -1,4 +1,5 @@
-export const WRAPPER_CENTERED_CLASS = 'wrapper-centered';
+import '../../../styles/ui/ui.scss';
+import VENDOR_PREFIXES from '../constants/vendorPrefixes';
 
 class UI {
   constructor() {
@@ -10,19 +11,15 @@ class UI {
 
   /**
    * Create am element
+   * @memberof UI
    * @param {String} tagName The tagname of the element.
    * @param {!String} className The classname
    * @return {HTMLElement}
-   * @memberof UI
    * @static
    */
-  static createElement(tagName = 'div', className) {
-    let element = document.createElement(tagName);
-
-    if (className) {
-      element.classList.add(className);
-    }
-
+  static _createElement(tagName = 'div', className) {
+    const element = document.createElement(tagName);
+    if (className) element.classList.add(className);
     return element;
   }
 
@@ -34,9 +31,28 @@ class UI {
    * @private
    * @static
    */
-  static appendElement(parent, element) {
+  static _appendElement(parent, element) {
     parent.appendChild(element);
   }
+
+  /**
+   * @memberof UI
+   * @param {String} value
+   * @static
+   */
+  static setUserSelect(value = 'none') {
+    const VENDORS = [
+      VENDOR_PREFIXES.WEBKIT,
+      VENDOR_PREFIXES.MOZILLA,
+      VENDOR_PREFIXES.IE,
+      ''
+    ];
+
+    VENDORS.forEach(vendor => {
+      element.style[`${vendor}user-select`] = value;
+    });
+  }
+
 }
 
 

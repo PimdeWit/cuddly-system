@@ -2,9 +2,10 @@
 
 .wrapper-centered {
 
+  display: flex;
+
   position: absolute;
 
-  display: flex;
   align-items: center;
   justify-content: center;
 
@@ -16,20 +17,23 @@
 
 canvas {
 
-  user-select: none;
-  touch-action: none;
-
   transition: {
     duration: 1s;
     property: opacity, visibility;
     timing-function: $easing;
   }
 
+  user-select: none;
+  touch-action: none;
+
+  will-change:  visibility, opacity;
+
 }
 
-canvas[hidden] {
+canvas[visuallyhidden] {
+
+  visibility: hidden;
 
   opacity: 0;
-  visibility: hidden;
 
 }

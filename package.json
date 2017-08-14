@@ -16,7 +16,8 @@
     "HMR"
   ],
   "dependencies": {
-    "pepjs": "^0.4.3"
+    "pepjs": "^0.4.3",
+    "webfontloader": "^1.6.28"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.6",

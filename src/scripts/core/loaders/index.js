@@ -1,11 +1,11 @@
 const LOADERS = [
   {
-    constructor: ImageLoader,
+    //constructor: ImageLoader,
     mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
   },
 
   {
-    constructor: VideoLoader,
+    //constructor: VideoLoader,
     mimeTypes: ['video/mp4', 'video/ogg', 'video/webm'],
   },
 ];
@@ -14,7 +14,8 @@ class Loader {
   constructor() {
     this.loaded = [];
   }
-  
+
+
   /**
    * @param {string} path 
    * @return {Promise<ImageLoader|VideoLoader>}
@@ -24,35 +25,43 @@ class Loader {
     return this._fetchFile(path);
   }
 
+
   _fetchFile(path) {
     return new Promise((resolve, reject) => {
       fetch(path).then(response => {
         return response.blob();
 
       }).then(blob => {
-        const loader = this._getLoaderForMimeType(blob.type);
+        // const loader = this._getLoaderForMimeType(blob.type);
+        // const loaderInstance = new loader(path);
 
-        const loaderInstance = new loader(path);
-
-        resolve(loaderInstance);
-
+        resolve(URL.createObjectURL(blob));
       });
-
     });
-
   }
 
+
+  /**
+   * Check if the downloaded file matches any of the supported MIME-types
+   * @param mimeType
+   * @returns {{constructor, mimeTypes}}
+   * @private
+   */
   _getLoaderForMimeType(mimeType) {
-    for(let i = 0; i < LOADERS.length; i ++) {
-      if(loaderConfig.mimeTypes.indexOf(mimeType) > -1) {
-        return loaderConfig.constructor;
-
+    for (let i = 0; i < LOADERS.length; i ++) {
+      if (LOADERS[i].mimeTypes.indexOf(mimeType) > -1) {
+        return LOADERS[i].constructor;
       }
-
     }
-
   }
 }
 
+function ImageLoader(blob) {
+  URL.createObjectURL(blob);
+}
+
+function VideoLoader(blob) {
+  console.log(blob);
+}
 
 export default Loader;
