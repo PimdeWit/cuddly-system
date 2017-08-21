@@ -1,6 +1,8 @@
 import UI from '../index';
 import UTILITY_ATTRIBUTES from '../../constants/utilityAttributes';
 
+import { loader } from '../../loaders';
+
 const DEFAULT_WIDTH = 500;
 const DEFAULT_HEIGHT = 800;
 

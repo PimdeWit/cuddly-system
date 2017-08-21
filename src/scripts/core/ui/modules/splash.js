@@ -6,30 +6,10 @@ class Splash extends UI {
     super();
 
     this.loader = new Loader();
-    this.loadedAssets = [];
-
-    this.loadAssets(assets).then(() => {
-      console.log('we did it');
-    })
-  }
-
-  loadAssets(assets) {
-    const assetCount = assets.length;
-    let currentIteration = 0;
 
     assets.forEach(asset => {
-      this.loader.load(asset).then(loadedAsset => {
-        this.loadedAssets.push(loadedAsset);
-        currentIteration++;
-        // ???
-      });
+      this.loader.load(asset);
     });
-  }
-
-  showImages() {
-    const image = new Image();
-    image.src = loadedAsset;
-    document.body.appendChild(image);
   }
 }
 

@@ -3,9 +3,8 @@ import VENDOR_PREFIXES from '../constants/vendorPrefixes';
 
 class UI {
   constructor() {
-    this.container = document.getElementById('app') || document.body;
-    this.pixelRatio = window.devicePixelRatio;
-    this.elements = {};
+    // find better way to make containing app global.
+    this.container = document.querySelector('#app');
   }
 
 
@@ -40,7 +39,7 @@ class UI {
    * @param {String} value
    * @static
    */
-  static setUserSelect(value = 'none') {
+  static setUserSelect(element, value = 'none') {
     const VENDORS = [
       VENDOR_PREFIXES.WEBKIT,
       VENDOR_PREFIXES.MOZILLA,

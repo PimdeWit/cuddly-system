@@ -1,67 +1,59 @@
 const LOADERS = [
   {
-    //constructor: ImageLoader,
-    mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+    mimeTypes: ['image/jpeg', 'image/png', 'image/webp']
   },
 
   {
-    //constructor: VideoLoader,
-    mimeTypes: ['video/mp4', 'video/ogg', 'video/webm'],
+    mimeTypes: ['video/mp4', 'video/ogg', 'video/webm']
   },
 ];
 
 class Loader {
   constructor() {
-    this.loaded = [];
+    this._cache = {};
+    this._pendingPromises = {};
   }
 
 
   /**
-   * @param {string} path 
+   * @param {string} path
    * @return {Promise<ImageLoader|VideoLoader>}
    */
   load(path) {
+    const blob = this._cache[path];
 
-    return this._fetchFile(path);
+    if (blob) {
+      return new Promise(resolve => resolve(blob));
+    } else {
+      return this._fetchFile(path);
+    }
+
   }
 
 
   _fetchFile(path) {
-    return new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       fetch(path).then(response => {
-        return response.blob();
+        return response.blob().then(blob => {
+          this._cache[path] = blob.slice();
 
-      }).then(blob => {
-        // const loader = this._getLoaderForMimeType(blob.type);
-        // const loaderInstance = new loader(path);
-
-        resolve(URL.createObjectURL(blob));
+          resolve(blob)
+        });
       });
     });
+
+    this._pendingPromises[path] = this._pendingPromises[path] || [];
+
+    this._pendingPromises[path].push(promise);
+
+    return promise;
+
   }
-
-
-  /**
-   * Check if the downloaded file matches any of the supported MIME-types
-   * @param mimeType
-   * @returns {{constructor, mimeTypes}}
-   * @private
-   */
-  _getLoaderForMimeType(mimeType) {
-    for (let i = 0; i < LOADERS.length; i ++) {
-      if (LOADERS[i].mimeTypes.indexOf(mimeType) > -1) {
-        return LOADERS[i].constructor;
-      }
-    }
-  }
-}
-
-function ImageLoader(blob) {
-  URL.createObjectURL(blob);
-}
-
-function VideoLoader(blob) {
-  console.log(blob);
 }
 
 export default Loader;
+
+const loader = new Loader();
+export {
+  loader,
+};
