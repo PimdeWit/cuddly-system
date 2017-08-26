@@ -9,7 +9,8 @@
  */
 const UTILITY_ATTRIBUTES = {
   POS_CENTERED: 'centered',
-  HIDDEN: 'visuallyhidden'
+  HIDDEN: 'visuallyhidden',
+  USER_SELECT: 'no-user-select'
 };
 
 export default UTILITY_ATTRIBUTES;

@@ -21,8 +21,8 @@ export default UserSelect;
 
 
 
-function setUserSelect(value) {
+function setUserSelect(element, value) {
   VENDORS.forEach(vendor => {
     element.style[`${vendor}user-select`] = value;
   });
-}
+};

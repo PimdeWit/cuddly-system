@@ -1,3 +1,4 @@
+import '../../../styles/core/canvas.scss';
 import UTILITY_ATTRIBUTES from '../constants/utilityAttributes';
 import { SHELL } from '../utilities/dom';
 
@@ -33,6 +34,9 @@ class Canvas {
 
     /** @type {Boolean} */
     this._hidden = hidden;
+
+    /** @type {Boolean} */
+    this._userSelect = true;
 
     this.width = width;
     this.height = height;
@@ -70,22 +74,27 @@ class Canvas {
 
   }
 
+  /** @returns {Boolean} */
+  get selectable() {
+    return this._userSelect;
+  }
+
+  set selectable(isSelectable) {
+    this._userSelect = isSelectable;
+
+    if (isSelectable) {
+      this.element.removeAttribute(UTILITY_ATTRIBUTES.USER_SELECT);
+    } else {
+      this.element.setAttribute(UTILITY_ATTRIBUTES.USER_SELECT, '');
+    }
+  }
+
   /**
    * Checks if the canvas element is rendered in the DOM.
    * @returns {Boolean}
    */
   get rendered() {
     return this._isRendered;
-  }
-
-  /** @returns {Boolean} */
-  _setReady() {
-    return new Promise((resolve, reject) => {
-      this.wrapper.appendChild(this.element);
-      SHELL.appendChild(this.wrapper);
-
-      requestAnimationFrame(() => resolve());
-    });
   }
 
   set width(newWidth) {
@@ -118,6 +127,16 @@ class Canvas {
     return this._height / 2;
   }
 
+  /** @returns {Boolean} */
+  _setReady() {
+    return new Promise((resolve, reject) => {
+      this.wrapper.appendChild(this.element);
+      SHELL.appendChild(this.wrapper);
+
+      requestAnimationFrame(() => resolve());
+    });
+  }
+
   /** @private */
   _resize() {
     this.element.width = this._width * window.devicePixelRatio;
@@ -126,7 +145,6 @@ class Canvas {
     this.element.style.width = `${this._width}px`;
     this.element.style.height = `${this._height}px`;
   }
-
 
   /**
    * Remove the element from the DOM and do some garbage collection.
