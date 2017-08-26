@@ -1,0 +1,1 @@
+export const SHELL = document.getElementById('app');

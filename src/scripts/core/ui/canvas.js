@@ -1,12 +1,10 @@
-import UI from '../index';
-import UTILITY_ATTRIBUTES from '../../constants/utilityAttributes';
+import UTILITY_ATTRIBUTES from '../constants/utilityAttributes';
+import { SHELL } from '../utilities/dom';
 
-import { loader } from '../../loaders';
+const DEFAULT_WIDTH = 800;
+const DEFAULT_HEIGHT = 600;
 
-const DEFAULT_WIDTH = 500;
-const DEFAULT_HEIGHT = 800;
-
-class Canvas extends UI {
+class Canvas {
   /**
    *
    * @param {String} id The canvas ID.
@@ -15,21 +13,31 @@ class Canvas extends UI {
    * @param {Number} height The canvas height. (OPTIONAL) Defaults to 500
    * @param {Boolean} hidden Set to true to hide the canvas on creation.
    */
-  constructor(id, className, width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT,
-              hidden = false) {
-    super();
-
+  constructor(id, className, width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT, hidden = false) {
     this._bindFunctions();
 
-    this.wrapper = UI._createElement('div', UTILITY_ATTRIBUTES.POS_CENTERED);
-    this.element = UI._createElement('canvas', className);
+    this.wrapper = document.createElement('div');
+    this.wrapper.classList.add(UTILITY_ATTRIBUTES.POS_CENTERED);
+
+    this.element = document.createElement('canvas');
+    this.element.id = id;
+    this.element.classList.add(className);
+
+    this.context = this.element.getContext('2d');
+
+    /** @type {Number} */
+    this._width = 0;
+
+    /** @type {Number} */
+    this._height = 0;
+
+    /** @type {Boolean} */
+    this._hidden = hidden;
 
     this.width = width;
     this.height = height;
 
     this.hidden = hidden;
-
-    this.element.id = id;
 
     this._isRendered = this._setReady();
   }
@@ -39,33 +47,25 @@ class Canvas extends UI {
     this.__resizeTimeout = null;
     this._resize = () => {
       clearTimeout(this.__resizeTimeout);
-
       this.__resizeTimeout = setTimeout(resizeFn, 0);
-
     };
-
   }
 
   /**
    * Checks if the canvas element is visually hidden in the document.
-   * @returns {*}
+   * @returns {Boolean}
    */
   get hidden() {
     return this._hidden;
-
   }
 
   set hidden(value) {
     this._hidden = value;
 
-    console.log(this._hidden);
-
     if (value) {
       this.element.setAttribute(UTILITY_ATTRIBUTES.HIDDEN, '');
-
     } else {
       this.element.removeAttribute(UTILITY_ATTRIBUTES.HIDDEN);
-
     }
 
   }
@@ -78,23 +78,22 @@ class Canvas extends UI {
     return this._isRendered;
   }
 
-  /**
-   * @return {Boolean}
-   */
+  /** @returns {Boolean} */
   _setReady() {
     return new Promise((resolve, reject) => {
-      UI._appendElement(this.wrapper, this.element);
-      UI._appendElement(this.container, this.wrapper);
+      this.wrapper.appendChild(this.element);
+      SHELL.appendChild(this.wrapper);
 
       requestAnimationFrame(() => resolve());
     });
   }
 
-  set width(value) {
-    this._width = value;
+  set width(newWidth) {
+    this._width = newWidth;
     this._resize();
   }
 
+  /** @returns {Number} */
   get width() {
     return this._width;
   }
@@ -104,28 +103,33 @@ class Canvas extends UI {
     this._resize();
   }
 
+  /** @returns {Number} */
   get height() {
     return this._height;
   }
 
+  /** @returns {Number} */
+  get centerX() {
+    return this._width / 2;
+  }
 
-  /**
-   * Resize the canvas.
-   * @private
-   */
+  /** @returns {Number} */
+  get centerY() {
+    return this._height / 2;
+  }
+
+  /** @private */
   _resize() {
-    const width = this._width === null ? DEFAULT_WIDTH : this._width;
-    const height = this._height === null ? DEFAULT_HEIGHT : this._height;
+    this.element.width = this._width * window.devicePixelRatio;
+    this.element.height = this._height * window.devicePixelRatio;
 
-    this.element.width = width * this.pixelRatio;
-    this.element.height = height * this.pixelRatio;
-    this.element.style.width = `${width}px`;
-    this.element.style.height = `${height}px`;
+    this.element.style.width = `${this._width}px`;
+    this.element.style.height = `${this._height}px`;
   }
 
 
   /**
-   * Remove the element from the dom.
+   * Remove the element from the DOM and do some garbage collection.
    */
   dispose() {
     this.element.remove();

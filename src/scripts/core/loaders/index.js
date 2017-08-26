@@ -37,6 +37,8 @@ class Loader {
         return response.blob().then(blob => {
           this._cache[path] = blob.slice();
 
+          // if (blob.type.includes('image')) blob = URL.createObjectURL(blob);
+
           resolve(blob)
         });
       });
@@ -52,8 +54,3 @@ class Loader {
 }
 
 export default Loader;
-
-const loader = new Loader();
-export {
-  loader,
-};
