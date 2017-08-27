@@ -1,15 +1,15 @@
-import Canvas from '../core/ui/canvas';
+import Canvas from '../core/canvas/index';
 import Loader from '../core/loaders/index';
 
 class Boot {
-  constructor() {
+  constructor(logoPath) {
     console.log('Running %cBoot', 'color: #288bff');
 
     this.canvas = new Canvas('boot', 'boot', 500, 500, true);
-    this.canvas.element.style.backgroundColor = 'blue';
     this.canvas.selectable = false;
 
-    this.canvas.rendered.then(() => this.showLogo('../../images/1234.png'));
+    this.canvas.rendered.then(() => this.showLogo(logoPath));
+
   }
 
   /**
@@ -18,21 +18,31 @@ class Boot {
    */
   async showLogo(logoPath) {
     const logo = await this.loadGraphics(logoPath);
-    const pixelRatio = window.devicePixelRatio;
+    const width = logo.width / 4;
+    const height = logo.height / 4;
 
-    this.canvas.context.drawImage(logo, 0, 0, logo.width / pixelRatio, logo.height / pixelRatio);
+    const x = this.canvas.centerX - width / 2;
+    const y = this.canvas.centerY - height / 2;
+
+    this.canvas.context.drawImage(logo, x, y, width, height);
 
     this.canvas.hidden = false;
   }
 
+  /**
+   *
+   * @param imagePath
+   * @returns {Promise.<*>}
+   */
   async loadGraphics(imagePath) {
     const loader = new Loader();
     return await createImageBitmap(await loader.load(imagePath));
   }
 
-
-
-
+  dispose() {
+    this.canvas.dispose();
+    this.canvas = null;
+  }
 }
 
 export default Boot;

@@ -17,15 +17,6 @@ class Canvas {
   constructor(id, className, width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT, hidden = false) {
     this._bindFunctions();
 
-    this.wrapper = document.createElement('div');
-    this.wrapper.classList.add(UTILITY_ATTRIBUTES.POS_CENTERED);
-
-    this.element = document.createElement('canvas');
-    this.element.id = id;
-    this.element.classList.add(className);
-
-    this.context = this.element.getContext('2d');
-
     /** @type {Number} */
     this._width = 0;
 
@@ -37,6 +28,15 @@ class Canvas {
 
     /** @type {Boolean} */
     this._userSelect = true;
+
+    /** @type {Boolean} */
+    this._isRendered = false;
+
+    this.element = document.createElement('canvas');
+    this.element.id = id;
+    this.element.classList.add(className);
+
+    this.context = this.element.getContext('2d');
 
     this.width = width;
     this.height = height;
@@ -130,8 +130,7 @@ class Canvas {
   /** @returns {Boolean} */
   _setReady() {
     return new Promise((resolve, reject) => {
-      this.wrapper.appendChild(this.element);
-      SHELL.appendChild(this.wrapper);
+      SHELL.appendChild(this.element);
 
       requestAnimationFrame(() => resolve());
     });
@@ -139,8 +138,8 @@ class Canvas {
 
   /** @private */
   _resize() {
-    this.element.width = this._width * window.devicePixelRatio;
-    this.element.height = this._height * window.devicePixelRatio;
+    this.element.width = this._width;
+    this.element.height = this._height;
 
     this.element.style.width = `${this._width}px`;
     this.element.style.height = `${this._height}px`;

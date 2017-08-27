@@ -1,2 +1,24 @@
+$easing: cubic-bezier(0.39, 0.575, 0.565, 1);
+
+canvas {
+  transition: {
+    duration: 1s;
+    property: opacity, visibility;
+    timing-function: $easing;
+  }
+
+  user-select: none;
+  touch-action: none;
+
+  will-change: visibility, opacity;
+}
+
+canvas[visuallyhidden] {
+
+  visibility: hidden;
+
+  opacity: 0;
+
+}
 
 canvas[no-user-select] { user-select: none; }
