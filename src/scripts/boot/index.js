@@ -1,5 +1,5 @@
 import Canvas from '../core/canvas/index';
-import Loader from '../core/loaders/index';
+import {Load} from '../core/loaders/index';
 
 class Boot {
   constructor(logoPath) {
@@ -35,8 +35,7 @@ class Boot {
    * @returns {Promise.<*>}
    */
   async loadGraphics(imagePath) {
-    const loader = new Loader();
-    return await createImageBitmap(await loader.load(imagePath));
+    return await createImageBitmap(await Load(imagePath));
   }
 
   dispose() {

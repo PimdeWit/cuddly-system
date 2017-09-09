@@ -1,56 +1,22 @@
-const LOADERS = [
-  {
-    mimeTypes: ['image/jpeg', 'image/png', 'image/webp']
-  },
+const _cache = {};
 
-  {
-    mimeTypes: ['video/mp4', 'video/ogg', 'video/webm']
-  },
-];
+export function Load(path) {
+  const blob = _cache[path];
 
-class Loader {
-  constructor() {
-    this._cache = {};
-    this._pendingPromises = {};
-  }
-
-
-  /**
-   * @param {string} path
-   * @return {Promise<ImageLoader|VideoLoader>}
-   */
-  load(path) {
-    const blob = this._cache[path];
-
-    if (blob) {
-      return new Promise(resolve => resolve(blob));
-    } else {
-      return this._fetchFile(path);
-    }
-
-  }
-
-
-  _fetchFile(path) {
-    const promise = new Promise((resolve, reject) => {
-      fetch(path).then(response => {
-        return response.blob().then(blob => {
-          this._cache[path] = blob.slice();
-
-          // if (blob.type.includes('image')) blob = URL.createObjectURL(blob);
-
-          resolve(blob)
-        });
-      });
-    });
-
-    this._pendingPromises[path] = this._pendingPromises[path] || [];
-
-    this._pendingPromises[path].push(promise);
-
-    return promise;
-
+  if (blob) {
+    return new Promise(resolve => resolve(blob));
+  } else {
+    return _fetchFile(path);
   }
 }
 
-export default Loader;
+function _fetchFile(path) {
+  return new Promise((resolve, reject) => {
+    fetch(path).then(response => {
+      return response.blob().then(blob => {
+        _cache[path] = blob.slice();
+        resolve(blob);
+      });
+    });
+  });
+}
