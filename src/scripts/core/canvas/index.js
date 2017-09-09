@@ -14,7 +14,7 @@ class Canvas {
    * @param {Number} height The canvas height. (OPTIONAL) Defaults to 500
    * @param {Boolean} hidden Set to true to hide the canvas on creation.
    */
-  constructor(id, className, width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT, hidden = false) {
+  constructor(width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT, hidden = false) {
     this._bindFunctions();
 
     /** @type {Number} */
@@ -33,8 +33,6 @@ class Canvas {
     this._isRendered = false;
 
     this.element = document.createElement('canvas');
-    this.element.id = id;
-    this.element.classList.add(className);
 
     this.context = this.element.getContext('2d');
 
