@@ -1,4 +1,4 @@
-import {Load} from '../loaders/index';
+import * as loader from '../loaders/index';
 
 class Map {
   constructor(canvas, imagePath) {
@@ -10,10 +10,9 @@ class Map {
   }
 
   async _generateMapArray(path) {
-    new Promise()
-    const image = await Load(path).then(blob => createImageBitmap(blob));
+    const image = await loader.load(path).then(blob => createImageBitmap(blob));
 
-    this._ctx.drawImage(image, 0, 0, image.width, image.height);
+    this._ctx.drawImage(image, 0, 0, image.width * 10, image.height * 10);
 
     const pixelDataArray = [];
 
@@ -27,7 +26,7 @@ class Map {
   }
 
   async _getMapImage() {
-    await Load(path).then(blob => createImageBitmap(blob));
+    await loader.load(path).then(blob => createImageBitmap(blob));
   }
 }
 

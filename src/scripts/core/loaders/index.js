@@ -1,27 +1,58 @@
 /** @private */
 let _cache = {};
+const _pendingPromises = {};
 
 /**
- * Load an image, either from the cache or from
+ * Load a file, either from the cache or from
  * @param path
  * @returns {Promise}
  * @constructor
  */
-export function Load(path) {
+export function load(path) {
   const blob = _cache[path];
+
+  console.warn('Attempting to download', path);
 
   if (blob) {
     return new Promise(resolve => resolve(blob));
+  } else if (_pendingPromises[path]) {
+    return _pendingPromises[path];
   } else {
     return _fetchFile(path);
   }
 }
 
 /**
+ * Load a batch of files.
+ * @param {Array.<String>} assetsToLoad
+ * @returns {Promise}
+ */
+export function loadBatch(assetsToLoad) {
+  return new Promise((resolve, reject) => {
+    // Will contain the downloaded assets.
+    const assets = [];
+
+    // For each path, download the file and push it to the assets array.
+    assetsToLoad.forEach(path => assets.push(load(path)));
+
+    // Resolve with the files if all files are loaded successfully.
+    Promise.all(assets).then(loadedAssets => resolve(loadedAssets));
+  });
+}
+
+/**
+ * In case you want to see the contents of the cache.
+ * @returns {Object}
+ */
+export function getCache() {
+  return _cache;
+}
+
+/**
  * Remove a key and its property from the cache.
  * @param {String} key The key to remove.
  */
-export function Remove(key) {
+export function remove(key) {
   delete _cache[key];
 }
 
@@ -29,7 +60,7 @@ export function Remove(key) {
  * Remove all keys and its properties from the cache.
  * @constructor
  */
-export function RemoveAll() {
+export function removeAll() {
   _cache = {};
 }
 
@@ -40,12 +71,21 @@ export function RemoveAll() {
  * @private
  */
 function _fetchFile(path) {
-  return new Promise((resolve, reject) => {
+  const promise = new Promise((resolve, reject) => {
     fetch(path).then(response => {
-      return response.blob().then(blob => {
+      response.blob().then(blob => {
+        // Remove the promise from the 'pending list' as it is now stored in the cache.
+        delete _pendingPromises[path];
+
         _cache[path] = blob.slice();
+
         resolve(blob);
       });
     });
   });
+
+  // Store the promise in case the same file gets called again before it's able to cache.
+  _pendingPromises[path] = promise;
+
+  return promise;
 }

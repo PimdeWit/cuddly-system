@@ -2,7 +2,7 @@ import '../styles/main.scss';
 import Boot from './boot/index';
 import Map from './core/map/index';
 import Canvas from './core/canvas/index';
-import {Load, Remove as RemoveFromCache, RemoveAll as RemoveAllFromCache} from './core/loaders/index';
+import * as loader from './core/loaders/index';
 
 class Game {
   constructor() {
