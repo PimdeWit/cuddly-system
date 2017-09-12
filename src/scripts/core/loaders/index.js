@@ -11,8 +11,6 @@ const _pendingPromises = {};
 export function load(path) {
   const blob = _cache[path];
 
-  console.warn('Attempting to download', path);
-
   if (blob) {
     return new Promise(resolve => resolve(blob));
   } else if (_pendingPromises[path]) {
