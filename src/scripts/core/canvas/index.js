@@ -1,33 +1,24 @@
 import '../../../styles/core/canvas.scss';
 import UTILITY_ATTRIBUTES from '../constants/utilityAttributes';
-import { SHELL } from '../utilities/dom';
+import {SHELL} from '../utilities/dom';
 
 const DEFAULT_WIDTH = 800;
 const DEFAULT_HEIGHT = 600;
 
 class Canvas {
   /**
-   *
-   * @param {String} id The canvas ID.
-   * @param {String} className Class name for the canvas. (OPTIONAL)
    * @param {Number} width The canvas width. (OPTIONAL) Defaults to 500.
    * @param {Number} height The canvas height. (OPTIONAL) Defaults to 500
-   * @param {Boolean} hidden Set to true to hide the canvas on creation.
+   * @param {Object} options Additional options for the canvas.
+   * @param {Boolean} options.offScreen Define if it's an offScreenCanvas or a regular one
+   * @param {Boolean} options.hidden Is the canvas initially hidden?
    */
-  constructor(width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT, hidden = false) {
+  constructor(width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT, options = {
+    offScreen: false,
+    hidden: false,
+    userSelect: true
+  }) {
     this._bindFunctions();
-
-    /** @type {Number} */
-    this._width = 0;
-
-    /** @type {Number} */
-    this._height = 0;
-
-    /** @type {Boolean} */
-    this._hidden = hidden;
-
-    /** @type {Boolean} */
-    this._userSelect = true;
 
     /** @type {Boolean} */
     this._isRendered = false;
@@ -39,8 +30,10 @@ class Canvas {
     this.width = width;
     this.height = height;
 
-    this.hidden = hidden;
+    if (options.id) this.element.id = options.id;
+    if (options.selector) this.element.className = options.selector;
 
+    this.hidden = options.hidden;
     this._isRendered = this._setReady();
   }
 
@@ -61,6 +54,9 @@ class Canvas {
     return this._hidden;
   }
 
+  /**
+   * @param {Boolean} value
+   */
   set hidden(value) {
     this._hidden = value;
 
@@ -77,6 +73,9 @@ class Canvas {
     return this._userSelect;
   }
 
+  /**
+   * @param {Boolean} isSelectable
+   */
   set selectable(isSelectable) {
     this._userSelect = isSelectable;
 
@@ -95,6 +94,9 @@ class Canvas {
     return this._isRendered;
   }
 
+  /**
+   * @param {Number} newWidth
+   */
   set width(newWidth) {
     this._width = newWidth;
     this._resize();
@@ -105,8 +107,11 @@ class Canvas {
     return this._width;
   }
 
-  set height(value) {
-    this._height = value;
+  /**
+   * @param {Number} heightInPixels
+   */
+  set height(heightInPixels) {
+    this._height = heightInPixels;
     this._resize();
   }
 

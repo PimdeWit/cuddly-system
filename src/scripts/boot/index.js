@@ -5,7 +5,7 @@ class Boot {
   constructor(logoPath) {
     console.log('Running %cBoot', 'color: #288bff');
 
-    this.canvas = new Canvas(500, 500, true);
+    this.canvas = new Canvas(500, 500);
     this.canvas.selectable = false;
 
     this.canvas.rendered.then(() => this.showLogo(logoPath));

@@ -9,7 +9,9 @@ class Game {
     this.boot = new Boot('../../images/lorem.png');
 
     const canvas = new Canvas(500, 500);
-    this.gameCanvas = new Map(canvas, '../../images/map.png');
+    const canvasMap = new Canvas(500, 500);
+
+    this.gameCanvas = new Map(canvasMap, '../../images/map.png');
 
   }
 
