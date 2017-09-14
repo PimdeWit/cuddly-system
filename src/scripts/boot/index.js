@@ -5,7 +5,7 @@ class Boot {
   constructor(logoPath) {
     console.log('Running %cBoot', 'color: #288bff');
 
-    this.canvas = new Canvas(500, 500);
+    this.canvas = new Canvas(512, 512);
     this.canvas.selectable = false;
 
     this.canvas.rendered.then(() => this.showLogo(logoPath));
@@ -35,7 +35,7 @@ class Boot {
    * @returns {Promise.<*>}
    */
   async loadGraphics(imagePath) {
-    return await createImageBitmap(await loader.load(imagePath));
+    return await loader.load(imagePath);
   }
 
   dispose() {

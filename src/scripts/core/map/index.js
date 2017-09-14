@@ -1,6 +1,6 @@
 import * as loader from '../loaders/index';
 
-const DEFAULT_SCALAR = 10;
+const DEFAULT_SCALAR = 512 / 8;
 
 class Map {
   constructor(canvas, imagePath) {
@@ -8,11 +8,13 @@ class Map {
     /** @type {HTMLCanvasElement} */
     this._canvas = canvas;
 
+    /** @type {ImageBitmap|HTMLImageElement|Null} */
     this._image = null;
 
-    /** @type {Object} */
+    /** @type {Array} */
     this._tiles = [];
 
+    /** @type {String} */
     this._imagePath = imagePath;
 
     /** @type {Number} */
@@ -24,13 +26,13 @@ class Map {
 
   /** @returns {Promise} */
   async generateMap() {
-    this._image = await loader.load(this._imagePath).then(blob => createImageBitmap(blob));
+    this._image = await loader.load(this._imagePath);
     this._pixelDataArray = await _generatePixelDataArray(this._image);
     this._tiles = await this._generateTiles(this._image.width, this._image.height, this._pixelDataArray);
   }
 
   /**
-   *
+   * Create an object and return an object of all tiles.
    * @param {Number} gridWidth
    * @param {Number} gridHeight
    * @param {Uint8Array} pixelData
@@ -39,7 +41,6 @@ class Map {
    */
   async _generateTiles(gridWidth = 8, gridHeight = 8, pixelData) {
     return new Promise(resolve => {
-
       const width = gridWidth;
       const height = gridHeight;
       const tiles = [];
@@ -98,6 +99,9 @@ class Map {
     this.generateMap(this._image);
   }
 
+  /**
+   * Remove all contents
+   */
   dispose() {
     this._canvas = null;
     this._image = null;

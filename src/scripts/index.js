@@ -8,21 +8,31 @@ class Game {
   constructor() {
     this.boot = new Boot('../../images/lorem.png');
 
-    this.canvasMap = new Canvas(500, 500);
-
-    this.gameCanvas = new Map(this.canvasMap, '../../images/map.png');
+    this.MapCanvas = new Canvas(512, 512);
+    this.tutorialMap = new Map(this.MapCanvas, '../../images/map.png');
 
     this.init();
   }
 
   async init() {
-    await this.gameCanvas.generateMap();
-    console.log(this.gameCanvas.tiles);
+    await this.tutorialMap.generateMap();
 
-    this.gameCanvas.tiles.forEach(tile => {
-      this.canvasMap.context.fillStyle = tile.fill;
-      this.canvasMap.context.fillRect(tile.x, tile.y, tile.width, tile.height);
-    });
+    const imageblobs = await loader.loadBatch(['../../images/lorem.png', '../../images/1234.jpg', '../../images/1234.png']);
+    const a = imageblobs;
+
+    console.log(a[0]);
+
+    a[0] = await createImageBitmap(imageblobs[0]);
+
+    console.log(a[0]);
+
+    setTimeout(() => {
+      this.tutorialMap.tiles.forEach(tile => {
+        var item = Math.floor(Math.random() * a.length);
+        this.MapCanvas.context.fillStyle = tile.fill;
+        this.MapCanvas.context.drawImage(a[item], tile.x, tile.y, tile.width, tile.height);
+      });
+    }, 2000);
   }
 
   showMenu() {
