@@ -8,11 +8,21 @@ class Game {
   constructor() {
     this.boot = new Boot('../../images/lorem.png');
 
-    const canvas = new Canvas(500, 500);
-    const canvasMap = new Canvas(500, 500);
+    this.canvasMap = new Canvas(500, 500);
 
-    this.gameCanvas = new Map(canvasMap, '../../images/map.png');
+    this.gameCanvas = new Map(this.canvasMap, '../../images/map.png');
 
+    this.init();
+  }
+
+  async init() {
+    await this.gameCanvas.generateMap();
+    console.log(this.gameCanvas.tiles);
+
+    this.gameCanvas.tiles.forEach(tile => {
+      this.canvasMap.context.fillStyle = tile.fill;
+      this.canvasMap.context.fillRect(tile.x, tile.y, tile.width, tile.height);
+    });
   }
 
   showMenu() {
