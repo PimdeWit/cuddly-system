@@ -29,12 +29,14 @@ class Game {
     let sprite = null;
 
     this.tutorialMap.tiles.forEach(tile => {
-      if (tile.r === 3) sprite = sprites[0];
-      if (tile.r === 255) sprite = sprites[2];
+      if (tile.colors.r === 3) sprite = sprites[0];
+      if (tile.colors.r === 255) sprite = sprites[2];
 
       this.MapCanvas.context.drawImage(sprite, tile.x, tile.y, tile.width, tile.height);
 
-      this.playerCanvas.context.fillStyle = `rgba(${tile.r}, ${tile.g}, ${tile.b}, 0.4)`;
+      console.log(tile);
+
+      this.playerCanvas.context.fillStyle = `rgba(${tile.colors.r}, ${tile.colors.g}, ${tile.colors.b}, 0.4)`;
       this.playerCanvas.context.fillRect(tile.x, tile.y, tile.width, tile.height);
       this.playerCanvas.context.fillStyle = 'red';
     });
@@ -47,7 +49,7 @@ class Game {
     requestAnimationFrame(this.render.bind(this));
 
     this.playerCanvas.context.clearRect(0, 0, this.playerCanvas.width, this.playerCanvas.height);
-    this.playerCanvas.context.fillRect(128, 128, 64, 64);
+    this.playerCanvas.context.fillRect(128 * SCALE, 128 * SCALE, 64 * SCALE, 64 * SCALE);
 
     console.log('hey');
   }

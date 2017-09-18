@@ -28,8 +28,12 @@ class Map {
   /** @returns {Promise} */
   async generateMap() {
     this._image = await loader.load(this._imagePath);
+
+    const rows = this._image.width;
+    const columns = this._image.height;
+
     this._pixelDataArray = await _generatePixelDataArray(this._image);
-    this._tiles = await this._generateTiles(this._image.width, this._image.height, this._pixelDataArray);
+    this._tiles = await this._generateTiles(rows, columns, this._pixelDataArray);
   }
 
   /**
@@ -46,7 +50,7 @@ class Map {
       const height = gridHeight;
       const tiles = [];
 
-      // pixelDataArray is a flat array, repeating R, G, B, A. Thus we need to iterate times 4 instead of 1.
+      // pixelDataArray is a flat array repeating R, G, B, A. Thus we need to iterate times 4 instead of 1.
       const RGBAGroup = 4;
 
       const pixelCount = width * height;
@@ -66,10 +70,12 @@ class Map {
           y: row * this.scalar,
           width: this.scalar,
           height: this.scalar,
-          fill: `rgba(${r}, ${g}, ${b}, ${a})`,
-          r: r,
-          g: g,
-          b: b
+          colors: {
+            r: r,
+            g: g,
+            b: b,
+            a: a
+          }
         };
 
         tiles.push(tile);

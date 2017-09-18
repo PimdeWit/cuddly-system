@@ -1,5 +1,7 @@
 /** @private */
 let _cache = {};
+
+/** @private */
 const _pendingPromises = {};
 
 /**
