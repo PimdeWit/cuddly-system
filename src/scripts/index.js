@@ -4,9 +4,10 @@ import Canvas from './core/canvas/index';
 import * as loader from './core/loaders/index';
 
 export let SHELL = null;
-export const SCALE = window.devicePixelRatio;
+export let SCALE = window.devicePixelRatio;
 
 class Game {
+
   constructor(shell) {
 
     SHELL = shell;
@@ -44,7 +45,6 @@ class Game {
     this.render();
   }
 
-
   render() {
     requestAnimationFrame(this.render.bind(this));
 
@@ -53,6 +53,7 @@ class Game {
 
     console.log('hey');
   }
+
 }
 
 window.onload = () => new Game(document.querySelector('#app'));
