@@ -1,5 +1,4 @@
 import '../../../styles/core/canvas.scss';
-import UTILITY_ATTRIBUTES from '../constants/utilityAttributes';
 import {SHELL, SCALE} from '../../index';
 
 
