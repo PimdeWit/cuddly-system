@@ -1,9 +1,10 @@
 import * as loader from '../loaders/index';
-
-const DEFAULT_SCALAR = 512 / 8;
+import {SHELL} from '../../index';
 
 class Map {
   constructor(canvas, imagePath) {
+
+    console.log(SHELL);
 
     /** @type {HTMLCanvasElement} */
     this._canvas = canvas;
@@ -18,7 +19,7 @@ class Map {
     this._imagePath = imagePath;
 
     /** @type {Number} */
-    this._scalar = DEFAULT_SCALAR;
+    this._scalar = SHELL.offsetWidth / 8;
 
     /** @type {Uint8Array} */
     this._pixelDataArray = [];
@@ -65,7 +66,10 @@ class Map {
           y: row * this.scalar,
           width: this.scalar,
           height: this.scalar,
-          fill: `rgba(${r}, ${g}, ${b}, ${a})`
+          fill: `rgba(${r}, ${g}, ${b}, ${a})`,
+          r: r,
+          g: g,
+          b: b
         };
 
         tiles.push(tile);
@@ -121,6 +125,7 @@ export default Map;
  */
 export async function _generatePixelDataArray(image) {
   return new Promise(resolve => {
+
     const mapDataCanvas = new OffscreenCanvas(image.width, image.height);
     const mapDataCanvasContext = mapDataCanvas.getContext('2d');
 

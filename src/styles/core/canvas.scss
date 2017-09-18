@@ -1,16 +1,15 @@
-$easing: cubic-bezier(0.39, 0.575, 0.565, 1);
 
 canvas {
+
   transition: {
     duration: 1s;
     property: opacity, visibility;
-    timing-function: $easing;
+    timing-function: cubic-bezier(0.39, 0.575, 0.565, 1);
   }
 
   user-select: none;
   touch-action: none;
 
-  will-change: visibility, opacity;
 }
 
 canvas[visuallyhidden] {
@@ -18,6 +17,17 @@ canvas[visuallyhidden] {
   visibility: hidden;
 
   opacity: 0;
+
+}
+
+canvas[game-layer] {
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
 
 }
 

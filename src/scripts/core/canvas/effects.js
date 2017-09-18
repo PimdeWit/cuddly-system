@@ -7,7 +7,7 @@ class EffectLayer {
     this._draw = false;
 
     this.canvas = canvas;
-    this.canvasImage = this.canvas.element;
+    this.canvasImage = this.canvas.domElement;
     this._time = 0;
 
     this.columns = 8;
@@ -32,14 +32,14 @@ class EffectLayer {
     // this.canvas.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     // this.canvas.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.canvas.context.drawImage(this.canvas.element, 0, 0, 10 + this._time, 1000);
+    this.canvas.context.drawImage(this.canvas.domElement, 0, 0, 10 + this._time, 1000);
 
     for (let i = this.columns - 1; i >= 0; i--) {
       const distance = this.columns[i] * 100;
 
       this.canvas.context.save();
 
-      this.canvas.context.drawImage(this.canvas.element, 0, 0, 10 + this._time, 1000);
+      this.canvas.context.drawImage(this.canvas.domElement, 0, 0, 10 + this._time, 1000);
       this.canvas.context.restore();
     }
 

@@ -1,44 +1,37 @@
 import '../styles/main.scss';
-import Boot from './boot/index';
 import Map from './core/map/index';
 import Canvas from './core/canvas/index';
 import * as loader from './core/loaders/index';
 
-class Game {
-  constructor() {
-    this.boot = new Boot('../../images/lorem.png');
+export let SHELL = null;
 
-    this.MapCanvas = new Canvas(512, 512);
+class Game {
+  constructor(shell) {
+
+    SHELL = shell;
+
+    this.MapCanvas = new Canvas();
+    this.MapCanvas.domElement.id = 'map';
+
     this.tutorialMap = new Map(this.MapCanvas, '../../images/map.png');
 
-    this.init();
+    this.initialise();
   }
 
-  async init() {
+  async initialise() {
     await this.tutorialMap.generateMap();
 
-    const imageblobs = await loader.loadBatch(['../../images/lorem.png', '../../images/1234.jpg', '../../images/1234.png']);
-    const a = imageblobs;
+    const sprites = await loader.loadBatch(['../../images/gym.png', '../../images/1234.jpg', '../../images/1234.png', '../../images/123.png']);
+    let sprite = null;
 
-    console.log(a[0]);
+    this.tutorialMap.tiles.forEach(tile => {
+      if (tile.r === 3) sprite = sprites[0];
+      if (tile.r === 255) sprite = sprites[2];
 
-    a[0] = await createImageBitmap(imageblobs[0]);
+      this.MapCanvas.context.drawImage(sprite, tile.x, tile.y, tile.width, tile.height);
+    });
 
-    console.log(a[0]);
-
-    setTimeout(() => {
-      this.tutorialMap.tiles.forEach(tile => {
-        var item = Math.floor(Math.random() * a.length);
-        this.MapCanvas.context.fillStyle = tile.fill;
-        this.MapCanvas.context.drawImage(a[item], tile.x, tile.y, tile.width, tile.height);
-      });
-    }, 2000);
-  }
-
-  showMenu() {
   }
 }
 
-window.onload = () => {
-  const app = new Game();
-};
+window.onload = () => new Game(document.querySelector('#app'));

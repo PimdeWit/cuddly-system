@@ -1,39 +1,35 @@
 import '../../../styles/core/canvas.scss';
 import UTILITY_ATTRIBUTES from '../constants/utilityAttributes';
-import {SHELL} from '../utilities/dom';
+import {SHELL} from '../../index';
 
-const DEFAULT_WIDTH = 800;
-const DEFAULT_HEIGHT = 600;
+
+const CANVAS_ATTRIBUTES = {
+  DISABLE_USER_SELECT: 'no-user-select',
+  LAYER: 'game-layer',
+  HIDDEN: 'visuallyhidden'
+};
 
 class Canvas {
   /**
    * @param {Number} width The canvas width. (OPTIONAL) Defaults to 500.
    * @param {Number} height The canvas height. (OPTIONAL) Defaults to 500
-   * @param {Object} options Additional options for the canvas.
-   * @param {Boolean} options.offScreen Define if it's an offScreenCanvas or a regular one
-   * @param {Boolean} options.hidden Is the canvas initially hidden?
    */
-  constructor(width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT, options = {
-    offScreen: false,
-    hidden: false,
-    userSelect: true
-  }) {
+  constructor(width = SHELL.offsetWidth, height = SHELL.offsetHeight) {
+
     this._bindFunctions();
 
     /** @type {Boolean} */
     this._isRendered = false;
 
-    this.element = document.createElement('canvas');
+    this.domElement = document.createElement('canvas');
+    this.domElement.setAttribute(CANVAS_ATTRIBUTES.LAYER, '');
+    this.domElement.setAttribute(CANVAS_ATTRIBUTES.DISABLE_USER_SELECT, '');
 
-    this.context = this.element.getContext('2d');
+    this.context = this.domElement.getContext('2d');
 
     this.width = width;
     this.height = height;
 
-    if (options.id) this.element.id = options.id;
-    if (options.selector) this.element.className = options.selector;
-
-    this.hidden = options.hidden;
     this._isRendered = this._setReady();
   }
 
@@ -47,7 +43,7 @@ class Canvas {
   }
 
   /**
-   * Checks if the canvas element is visually hidden in the document.
+   * Checks if the canvas domElement is visually hidden in the document.
    * @returns {Boolean}
    */
   get hidden() {
@@ -61,9 +57,9 @@ class Canvas {
     this._hidden = value;
 
     if (value) {
-      this.element.setAttribute(UTILITY_ATTRIBUTES.HIDDEN, '');
+      this.domElement.setAttribute(UTILITY_ATTRIBUTES.HIDDEN, '');
     } else {
-      this.element.removeAttribute(UTILITY_ATTRIBUTES.HIDDEN);
+      this.domElement.removeAttribute(UTILITY_ATTRIBUTES.HIDDEN);
     }
 
   }
@@ -80,14 +76,14 @@ class Canvas {
     this._userSelect = isSelectable;
 
     if (isSelectable) {
-      this.element.removeAttribute(UTILITY_ATTRIBUTES.USER_SELECT);
+      this.domElement.removeAttribute(UTILITY_ATTRIBUTES.USER_SELECT);
     } else {
-      this.element.setAttribute(UTILITY_ATTRIBUTES.USER_SELECT, '');
+      this.domElement.setAttribute(UTILITY_ATTRIBUTES.USER_SELECT, '');
     }
   }
 
   /**
-   * Checks if the canvas element is rendered in the DOM.
+   * Checks if the canvas domElement is rendered in the DOM.
    * @returns {Boolean}
    */
   get rendered() {
@@ -133,7 +129,7 @@ class Canvas {
   /** @returns {Boolean} */
   _setReady() {
     return new Promise((resolve, reject) => {
-      SHELL.appendChild(this.element);
+      SHELL.appendChild(this.domElement);
 
       requestAnimationFrame(() => resolve());
     });
@@ -141,19 +137,19 @@ class Canvas {
 
   /** @private */
   _resize() {
-    this.element.width = this._width;
-    this.element.height = this._height;
+    this.domElement.width = this._width;
+    this.domElement.height = this._height;
 
-    this.element.style.width = `${this._width}px`;
-    this.element.style.height = `${this._height}px`;
+    this.domElement.style.width = `${this._width}px`;
+    this.domElement.style.height = `${this._height}px`;
   }
 
   /**
-   * Remove the element from the DOM and do some garbage collection.
+   * Remove the domElement from the DOM and do some garbage collection.
    */
   dispose() {
-    this.element.remove();
-    this.element = null;
+    this.domElement.remove();
+    this.domElement = null;
   }
 }
 

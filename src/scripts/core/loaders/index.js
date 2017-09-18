@@ -77,9 +77,10 @@ function _fetchFile(path) {
 
         _cache[path] = blob.slice();
 
-        if (path.includes('.jpg') || path.includes('.png')) blob = createImageBitmap(blob);
+        if (path.includes('.jpg') || path.includes('.png')) {
+          createImageBitmap(blob).then(newblob => resolve(newblob));
+        }
 
-        resolve(blob);
       });
     });
   });
