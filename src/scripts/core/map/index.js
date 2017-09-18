@@ -1,5 +1,5 @@
 import * as loader from '../loaders/index';
-import {SHELL} from '../../index';
+import {SHELL, SCALE} from '../../index';
 
 class Map {
   constructor(canvas, imagePath) {
@@ -19,7 +19,7 @@ class Map {
     this._imagePath = imagePath;
 
     /** @type {Number} */
-    this._scalar = SHELL.offsetWidth / 8;
+    this._scalar = (SHELL.offsetWidth / 8) * SCALE;
 
     /** @type {Uint8Array} */
     this._pixelDataArray = [];
@@ -40,7 +40,7 @@ class Map {
    * @returns {Promise}
    * @private
    */
-  async _generateTiles(gridWidth = 8, gridHeight = 8, pixelData) {
+  async _generateTiles(gridWidth = 8 * SCALE, gridHeight = 8 * SCALE, pixelData) {
     return new Promise(resolve => {
       const width = gridWidth;
       const height = gridHeight;

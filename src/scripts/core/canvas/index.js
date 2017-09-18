@@ -1,6 +1,6 @@
 import '../../../styles/core/canvas.scss';
 import UTILITY_ATTRIBUTES from '../constants/utilityAttributes';
-import {SHELL} from '../../index';
+import {SHELL, SCALE} from '../../index';
 
 
 const CANVAS_ATTRIBUTES = {
@@ -61,25 +61,6 @@ class Canvas {
     } else {
       this.domElement.removeAttribute(UTILITY_ATTRIBUTES.HIDDEN);
     }
-
-  }
-
-  /** @returns {Boolean} */
-  get selectable() {
-    return this._userSelect;
-  }
-
-  /**
-   * @param {Boolean} isSelectable
-   */
-  set selectable(isSelectable) {
-    this._userSelect = isSelectable;
-
-    if (isSelectable) {
-      this.domElement.removeAttribute(UTILITY_ATTRIBUTES.USER_SELECT);
-    } else {
-      this.domElement.setAttribute(UTILITY_ATTRIBUTES.USER_SELECT, '');
-    }
   }
 
   /**
@@ -116,16 +97,6 @@ class Canvas {
     return this._height;
   }
 
-  /** @returns {Number} */
-  get centerX() {
-    return this._width / 2;
-  }
-
-  /** @returns {Number} */
-  get centerY() {
-    return this._height / 2;
-  }
-
   /** @returns {Boolean} */
   _setReady() {
     return new Promise((resolve, reject) => {
@@ -137,8 +108,8 @@ class Canvas {
 
   /** @private */
   _resize() {
-    this.domElement.width = this._width;
-    this.domElement.height = this._height;
+    this.domElement.width = this._width * SCALE;
+    this.domElement.height = this._height * SCALE;
 
     this.domElement.style.width = `${this._width}px`;
     this.domElement.style.height = `${this._height}px`;

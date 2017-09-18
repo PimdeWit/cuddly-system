@@ -4,6 +4,7 @@ import Canvas from './core/canvas/index';
 import * as loader from './core/loaders/index';
 
 export let SHELL = null;
+export const SCALE = window.devicePixelRatio;
 
 class Game {
   constructor(shell) {
@@ -12,6 +13,9 @@ class Game {
 
     this.MapCanvas = new Canvas();
     this.MapCanvas.domElement.id = 'map';
+
+    this.playerCanvas = new Canvas();
+    this.playerCanvas.domElement.id = 'player';
 
     this.tutorialMap = new Map(this.MapCanvas, '../../images/map.png');
 
@@ -29,8 +33,23 @@ class Game {
       if (tile.r === 255) sprite = sprites[2];
 
       this.MapCanvas.context.drawImage(sprite, tile.x, tile.y, tile.width, tile.height);
+
+      this.playerCanvas.context.fillStyle = `rgba(${tile.r}, ${tile.g}, ${tile.b}, 0.4)`;
+      this.playerCanvas.context.fillRect(tile.x, tile.y, tile.width, tile.height);
+      this.playerCanvas.context.fillStyle = 'red';
     });
 
+    this.render();
+  }
+
+
+  render() {
+    requestAnimationFrame(this.render.bind(this));
+
+    this.playerCanvas.context.clearRect(0, 0, this.playerCanvas.width, this.playerCanvas.height);
+    this.playerCanvas.context.fillRect(128, 128, 64, 64);
+
+    console.log('hey');
   }
 }
 
