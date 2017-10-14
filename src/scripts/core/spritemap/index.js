@@ -36,7 +36,7 @@ class SpriteMap {
      * @type {Number}
      * @private
      */
-    this._scalar = (SHELL.offsetWidth / 8) * SCALE;
+    this._scalar = 0;
 
     /**
      * @type {Array}
@@ -74,6 +74,8 @@ class SpriteMap {
 
       const width = pixelData.width;
       const height = pixelData.height;
+
+      this._scalar = (SHELL.offsetWidth / width) * SCALE;
 
       // The pixelData.data array is a flat array repeating R,G,B,A. e.g Red is displayed as: `[255, 0, 0, 1]`
       const singleIterationLength = ['r', 'g', 'b', 'a'].length;

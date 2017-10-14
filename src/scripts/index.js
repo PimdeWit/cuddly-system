@@ -1,5 +1,6 @@
 import '../styles/main.scss';
-import Map from './core/spritemap/index';
+import Entity from './core/2d/entities/index';
+import SpriteMap from './core/spritemap/index';
 import Canvas from './core/canvas/index';
 import * as loader from './core/loaders/index';
 
@@ -16,12 +17,13 @@ class Game {
     this.MapCanvas = new Canvas();
     this.MapCanvas.domElement.id = 'map';
 
+    this.player = new Entity('player');
     this.playerCanvas = new Canvas();
     this.playerCanvas.domElement.id = 'player';
 
-    this.tutorialMap = new Map(this.MapCanvas, '../../images/map.png');
+    this.tutorialMap = new SpriteMap(this.MapCanvas, '../../images/map-debug_16x16.png');
 
-    this.initialise();
+    this.initialise().then(this.render.bind(this));
   }
 
   async initialise() {
@@ -31,26 +33,26 @@ class Game {
     let sprite = null;
 
     this.tutorialMap.tiles.forEach(tile => {
-      if (tile.colors.r === 3) sprite = sprites[0];
-      if (tile.colors.r === 255) sprite = sprites[2];
+      if (tile.colors.r === 255) sprite = sprites[0];
+      if (tile.colors.r === 128) sprite = sprites[1];
+      if (tile.colors.r === 159) sprite = sprites[2];
+      if (tile.colors.r === 48) sprite = sprites[2];
 
-      this.MapCanvas.context.drawImage(sprite, tile.x, tile.y, tile.width, tile.height);
-
-      this.playerCanvas.context.fillStyle = `rgba(${tile.colors.r}, ${tile.colors.g}, ${tile.colors.b}, 0.4)`;
-      this.playerCanvas.context.fillRect(tile.x, tile.y, tile.width, tile.height);
-      this.playerCanvas.context.fillStyle = 'red';
+      if (sprite) this.MapCanvas.context.drawImage(sprite, tile.x, tile.y, tile.width, tile.height);
     });
 
-    this.render();
+    this.playerCanvas.context.fillStyle = 'white';
+    this.player.position = {
+      x: this.tutorialMap.scalar,
+      y: this.tutorialMap.scalar
+    };
   }
 
   render() {
     //requestAnimationFrame(this.render.bind(this));
 
     this.playerCanvas.context.clearRect(0, 0, this.playerCanvas.width, this.playerCanvas.height);
-    this.playerCanvas.context.fillRect(128 * SCALE, 128 * SCALE, 64 * SCALE, 64 * SCALE);
-
-    console.log('hey');
+    this.playerCanvas.context.fillRect(this.player.position.x, this.player.position.y, this.tutorialMap.scalar, this.tutorialMap.scalar);
   }
 
 }
