@@ -1,7 +1,7 @@
 import * as loader from '../loaders/index';
 import {SHELL, SCALE} from '../../index';
 
-class Map {
+class SpriteMap {
   constructor(canvas, imagePath) {
     /** @type {HTMLCanvasElement} */
     this._canvas = canvas;
@@ -121,7 +121,7 @@ class Map {
   }
 }
 
-export default Map;
+export default SpriteMap;
 
 /**
  * draw an image to a canvas, loop through the pixels, and return an array with the R, G, B, A colour values.

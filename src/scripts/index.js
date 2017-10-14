@@ -1,5 +1,5 @@
 import '../styles/main.scss';
-import Map from './core/map/index';
+import Map from './core/spritemap/index';
 import Canvas from './core/canvas/index';
 import * as loader from './core/loaders/index';
 
