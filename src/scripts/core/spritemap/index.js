@@ -2,15 +2,16 @@ import * as loader from '../loaders/index';
 import {SHELL, SCALE} from '../../index';
 
 class SpriteMap {
+  /**
+   * @param {HTMLCanvasElement} canvas
+   * @param {String} imagePath
+   */
   constructor(canvas, imagePath) {
     /**
-     * @type {HTMLCanvasElement}
      * @readonly
      * @private
      */
     this._canvas = canvas;
-
-    /** @type {ImageBitmap|HTMLImageElement|Null} */
 
     /**
      * @type {ImageBitmap|HTMLImageElement|Null}
@@ -26,6 +27,7 @@ class SpriteMap {
 
     /**
      * @type {String}
+     * @readonly
      * @private
      */
     this._imagePath = imagePath;
