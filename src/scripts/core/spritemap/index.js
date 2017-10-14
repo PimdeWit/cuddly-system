@@ -3,26 +3,50 @@ import {SHELL, SCALE} from '../../index';
 
 class SpriteMap {
   constructor(canvas, imagePath) {
-    /** @type {HTMLCanvasElement} */
+    /**
+     * @type {HTMLCanvasElement}
+     * @readonly
+     * @private
+     */
     this._canvas = canvas;
 
     /** @type {ImageBitmap|HTMLImageElement|Null} */
+
+    /**
+     * @type {ImageBitmap|HTMLImageElement|Null}
+     * @private
+     */
     this._image = null;
 
-    /** @type {Array} */
+    /**
+     * @type {Array}
+     * @private
+     */
     this._tiles = [];
 
-    /** @type {String} */
+    /**
+     * @type {String}
+     * @private
+     */
     this._imagePath = imagePath;
 
-    /** @type {Number} */
+    /**
+     * @type {Number}
+     * @private
+     */
     this._scalar = (SHELL.offsetWidth / 8) * SCALE;
 
-    /** @type {Array} */
+    /**
+     * @type {Array}
+     * @private
+     */
     this._pixelDataArray = [];
   }
 
-  /** @returns {Promise} */
+  /**
+   * @async
+   * @returns {Promise}
+   */
   async generateMap() {
     this._image = await loader.load(this._imagePath);
 
@@ -32,12 +56,13 @@ class SpriteMap {
   }
 
   /**
-   *
+   * Create a readable object from a pixelData array
    * @param {Object} pixelData
    * @param {Array} pixelData.data
    * @param {Array} pixelData.dataUnion
    * @param {Number} pixelData.width
    * @param {Number} pixelData.height
+   * @async
    * @returns {Promise}
    * @private
    */
@@ -125,7 +150,8 @@ export default SpriteMap;
 
 /**
  * draw an image to a canvas, loop through the pixels, and return an array with the R, G, B, A colour values.
- * @param image
+ * @param {HTMLImageElement}
+ * @async
  * @returns {Promise}
  * @private
  */
