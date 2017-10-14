@@ -3,9 +3,6 @@ import {SHELL, SCALE} from '../../index';
 
 class Map {
   constructor(canvas, imagePath) {
-
-    console.log(SHELL);
-
     /** @type {HTMLCanvasElement} */
     this._canvas = canvas;
 
@@ -21,7 +18,7 @@ class Map {
     /** @type {Number} */
     this._scalar = (SHELL.offsetWidth / 8) * SCALE;
 
-    /** @type {Uint8Array} */
+    /** @type {Array} */
     this._pixelDataArray = [];
   }
 
@@ -29,37 +26,38 @@ class Map {
   async generateMap() {
     this._image = await loader.load(this._imagePath);
 
-    const rows = this._image.width;
-    const columns = this._image.height;
-
     this._pixelDataArray = await _generatePixelDataArray(this._image);
-    this._tiles = await this._generateTiles(rows, columns, this._pixelDataArray);
+
+    this._tiles = await this._generateTiles(this._pixelDataArray);
   }
 
   /**
-   * Create an object and return an object of all tiles.
-   * @param {Number} gridWidth
-   * @param {Number} gridHeight
-   * @param {Uint8Array} pixelData
+   *
+   * @param {Object} pixelData
+   * @param {Array} pixelData.data
+   * @param {Array} pixelData.dataUnion
+   * @param {Number} pixelData.width
+   * @param {Number} pixelData.height
    * @returns {Promise}
    * @private
    */
-  async _generateTiles(gridWidth = 8 * SCALE, gridHeight = 8 * SCALE, pixelData) {
+  async _generateTiles(pixelData) {
     return new Promise(resolve => {
-      const width = gridWidth;
-      const height = gridHeight;
       const tiles = [];
 
-      // pixelDataArray is a flat array repeating R, G, B, A. Thus we need to iterate times 4 instead of 1.
-      const RGBAGroup = 4;
+      const width = pixelData.width;
+      const height = pixelData.height;
+
+      // The pixelData.data array is a flat array repeating R,G,B,A. e.g Red is displayed as: `[255, 0, 0, 1]`
+      const singleIterationLength = ['r', 'g', 'b', 'a'].length;
 
       const pixelCount = width * height;
-      const pixels = pixelCount * RGBAGroup;
+      const pixels = pixelCount * singleIterationLength;
 
       let row = 0;
       let columns = 0;
 
-      for (let i = 0; i < pixels; i += RGBAGroup) {
+      for (let i = 0; i < pixels; i += singleIterationLength) {
         const r = pixelData.data[i];
         const g = pixelData.data[i + 1];
         const b = pixelData.data[i + 2];
@@ -82,7 +80,9 @@ class Map {
 
         columns++;
 
-        if ((i + RGBAGroup) % (width * RGBAGroup) === 0) {
+        const setCursorToNewline = (i + singleIterationLength) % (width * singleIterationLength) === 0;
+
+        if (setCursorToNewline) {
           row++;
           columns = 0;
         }
@@ -131,7 +131,6 @@ export default Map;
  */
 export async function _generatePixelDataArray(image) {
   return new Promise(resolve => {
-
     const mapDataCanvas = new OffscreenCanvas(image.width, image.height);
     const mapDataCanvasContext = mapDataCanvas.getContext('2d');
 
