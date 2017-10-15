@@ -1,5 +1,5 @@
 import '../../../styles/core/canvas.scss';
-import {SHELL, SCALE} from '../../index';
+import {SHELL, SCALE} from '../../game';
 
 
 const CANVAS_ATTRIBUTES = {
@@ -13,9 +13,11 @@ class Canvas {
    * @param {Number} width The canvas width. (OPTIONAL) Defaults to 500.
    * @param {Number} height The canvas height. (OPTIONAL) Defaults to 500
    */
-  constructor(width = SHELL.offsetWidth, height = SHELL.offsetHeight) {
+  constructor(id, width = SHELL.offsetWidth, height = SHELL.offsetHeight) {
 
     this._bindFunctions();
+
+    this._id = id;
 
     /** @type {Boolean} */
     this._isRendered = false;
@@ -23,6 +25,7 @@ class Canvas {
     this.domElement = document.createElement('canvas');
     this.domElement.setAttribute(CANVAS_ATTRIBUTES.LAYER, '');
     this.domElement.setAttribute(CANVAS_ATTRIBUTES.DISABLE_USER_SELECT, '');
+    this.domElement.id = id;
 
     this.context = this.domElement.getContext('2d');
 
@@ -39,6 +42,14 @@ class Canvas {
       clearTimeout(this.__resizeTimeout);
       this.__resizeTimeout = setTimeout(resizeFn, 0);
     };
+  }
+
+  /**
+   * @readonly
+   * @returns {String}
+   */
+  get id() {
+    return this._id;
   }
 
   /**

@@ -1,12 +1,12 @@
 import * as loader from '../loaders/index';
-import {SHELL, SCALE} from '../../index';
+import {SHELL, SCALE} from '../../game';
 
 class SpriteMap {
   /**
    * @param {HTMLCanvasElement} canvas
-   * @param {String} imagePath
+   * @param {ImageBitmap|HTMLImageElement|Null} image
    */
-  constructor(canvas, imagePath) {
+  constructor(canvas, image) {
     /**
      * @readonly
      * @private
@@ -17,20 +17,13 @@ class SpriteMap {
      * @type {ImageBitmap|HTMLImageElement|Null}
      * @private
      */
-    this._image = null;
+    this._image = image;
 
     /**
      * @type {Array}
      * @private
      */
     this._tiles = [];
-
-    /**
-     * @type {String}
-     * @readonly
-     * @private
-     */
-    this._imagePath = imagePath;
 
     /**
      * @type {Number}
@@ -42,7 +35,8 @@ class SpriteMap {
      * @type {Array}
      * @private
      */
-    this._pixelDataArray = [];
+    this._imageData = [];
+
   }
 
   /**
@@ -50,30 +44,28 @@ class SpriteMap {
    * @returns {Promise}
    */
   async generateMap() {
-    this._image = await loader.load(this._imagePath);
+    this._imageData = await _generateImageData(this._image);
 
-    this._pixelDataArray = await _generatePixelDataArray(this._image);
-
-    this._tiles = await this._generateTiles(this._pixelDataArray);
+    this._tiles = await this._generateTiles(this._imageData);
   }
 
   /**
    * Create a readable object from a pixelData array
-   * @param {Object} pixelData
-   * @param {Array} pixelData.data
-   * @param {Array} pixelData.dataUnion
-   * @param {Number} pixelData.width
-   * @param {Number} pixelData.height
+   * @param {Object} imageData
+   * @param {Array} imageData.data
+   * @param {Array} imageData.dataUnion
+   * @param {Number} imageData.width
+   * @param {Number} imageData.height
    * @async
    * @returns {Promise}
    * @private
    */
-  async _generateTiles(pixelData) {
+  async _generateTiles(imageData) {
     return new Promise(resolve => {
       const tiles = [];
 
-      const width = pixelData.width;
-      const height = pixelData.height;
+      const width = imageData.width;
+      const height = imageData.height;
 
       this._scalar = (SHELL.offsetWidth / width) * SCALE;
 
@@ -87,10 +79,10 @@ class SpriteMap {
       let columns = 0;
 
       for (let i = 0; i < pixels; i += singleIterationLength) {
-        const r = pixelData.data[i];
-        const g = pixelData.data[i + 1];
-        const b = pixelData.data[i + 2];
-        const a = pixelData.data[i + 3];
+        const r = imageData.data[i];
+        const g = imageData.data[i + 1];
+        const b = imageData.data[i + 2];
+        const a = imageData.data[i + 3];
 
         const tile = {
           x: columns * this.scalar,
@@ -144,7 +136,7 @@ class SpriteMap {
   dispose() {
     this._canvas = null;
     this._image = null;
-    this._pixelDataArray = null;
+    this._imageData = null;
     this._tiles = null;
     this._scalar = null;
   }
@@ -154,12 +146,12 @@ export default SpriteMap;
 
 /**
  * draw an image to a canvas, loop through the pixels, and return an array with the R, G, B, A colour values.
- * @param {HTMLImageElement}
+ * @param {HTMLImageElement} image
  * @async
  * @returns {Promise}
  * @private
  */
-export async function _generatePixelDataArray(image) {
+export async function _generateImageData(image) {
   return new Promise(resolve => {
     const mapDataCanvas = new OffscreenCanvas(image.width, image.height);
     const mapDataCanvasContext = mapDataCanvas.getContext('2d');
