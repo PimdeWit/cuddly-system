@@ -60,7 +60,7 @@ module.exports = env => {
         vendors: extractTextVendors
       }
     }),
-    devtool: isProd ? 'eval' : 'source-spritemap',
+    devtool: isProd ? 'eval' : 'source-map',
     devServer: {
       contentBase: dist,
       port: process.env.PORT || 3000,
