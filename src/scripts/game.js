@@ -21,6 +21,7 @@ export class Game {
     SCALE = window.devicePixelRatio;
 
     this.world = {};
+    this._lastPosition = null;
 
     this._initialise().then(this.render.bind(this));
   }
@@ -71,8 +72,20 @@ export class Game {
 
   render() {
     const player = this.world.tutorial.player;
+    let colliding = false;
 
     requestAnimationFrame(this.render.bind(this));
+
+    this.world.tutorial.collidableLayer.tiles.forEach(tile => {
+      if (player.entity.position.x >= tile.x && player.entity.position.x < tile.x + tile.width &&
+          player.entity.position.y >= tile.y && player.entity.position.y < tile.y + tile.height) {
+        if (this._lastPosition) player.entity.position = this._lastPosition;
+        colliding = true;
+        console.log(this._lastPosition);
+      }
+    });
+
+    if (colliding) this._lastPosition = this.world.tutorial.player.entity.position;
 
     if (this.keyboard.activeKey) {
       console.log(this.keyboard.activeKey);
@@ -81,7 +94,6 @@ export class Game {
       if (this.keyboard.activeKey === (39 || 68)) player.entity.position.x += this.world.tutorial.spriteMap.scalar;
       if (this.keyboard.activeKey === (40 || 83)) player.entity.position.y += this.world.tutorial.spriteMap.scalar;
       if (this.keyboard.activeKey === (37 || 65)) player.entity.position.x -= this.world.tutorial.spriteMap.scalar;
-
     }
 
     player.canvas.context.clearRect(0, 0, player.canvas.width, player.canvas.height);
