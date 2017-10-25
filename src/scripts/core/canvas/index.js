@@ -15,7 +15,7 @@ class Canvas {
    */
   constructor(id, width = SHELL.offsetWidth, height = SHELL.offsetHeight) {
 
-    this._bindFunctions();
+    // this._bindFunctions();
 
     this._id = id;
 
@@ -35,14 +35,14 @@ class Canvas {
     this._isRendered = this._setReady();
   }
 
-  _bindFunctions() {
-    const resizeFn = this._resize.bind(this);
-    this.__resizeTimeout = null;
-    this._resize = () => {
-      clearTimeout(this.__resizeTimeout);
-      this.__resizeTimeout = setTimeout(resizeFn, 0);
-    };
-  }
+  // _bindFunctions() {
+  //   const resizeFn = this._resize.bind(this);
+  //   this.__resizeTimeout = null;
+  //   this._resize = () => {
+  //     clearTimeout(this.__resizeTimeout);
+  //     this.__resizeTimeout = setTimeout(resizeFn, 0);
+  //   };
+  // }
 
   /**
    * @readonly

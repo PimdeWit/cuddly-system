@@ -33,19 +33,25 @@ export class Game {
     ]);
     let sprite = null;
 
+    this.world.tutorial = {};
+    this.world.tutorial.canvas = new Canvas('tutorial');
+    this.world.tutorial.spriteMap = new SpriteMap(this.world.tutorial.canvas, mapTexture);
+
     this.player = {
       entity: new Entity('player'),
       canvas: new Canvas('player')
     };
 
-    this.world.tutorial = {};
-    this.world.tutorial.canvas = new Canvas('tutorial');
-    this.world.tutorial.spriteMap = new SpriteMap(this.world.tutorial.canvas, mapTexture);
-
     await this.world.tutorial.spriteMap.generateMap();
-
+    
+    
+    let collidableTiles = [];
+    
     this.world.tutorial.spriteMap.tiles.forEach(tile => {
-      if (tile.colors.r === 255) sprite = sprites[0];
+      if (tile.colors.r === 255) {
+        collidableTiles.push(tile);
+        sprite = sprites[0];
+      }
       if (tile.colors.r === 128) sprite = sprites[1];
       if (tile.colors.r === 159) sprite = sprites[2];
       if (tile.colors.r === 48) sprite = sprites[2];
@@ -59,8 +65,9 @@ export class Game {
       y: this.world.tutorial.spriteMap.scalar
     };
 
-    // this.keyboard = new KeyboardManager();
-    // this.keyboard.listen();
+
+    this.keyboard = new KeyboardManager();
+    this.keyboard.listen();
 
     ACTIVE_MAP = this.world.tutorial;
   }
@@ -69,15 +76,15 @@ export class Game {
 
     requestAnimationFrame(this.render.bind(this));
 
-    // if (this.keyboard.activeKey) {
-    //   console.log(this.keyboard.activeKey);
-    //
-    //   if (this.keyboard.activeKey === (38 || 76)) this.player.entity.position.y -= this.world.tutorial.spriteMap.scalar;
-    //   if (this.keyboard.activeKey === (39 || 68)) this.player.entity.position.x += this.world.tutorial.spriteMap.scalar;
-    //   if (this.keyboard.activeKey === (40 || 83)) this.player.entity.position.y += this.world.tutorial.spriteMap.scalar;
-    //   if (this.keyboard.activeKey === (37 || 65)) this.player.entity.position.x -= this.world.tutorial.spriteMap.scalar;
-    //
-    // }
+    if (this.keyboard.activeKey) {
+      console.log(this.keyboard.activeKey);
+
+      if (this.keyboard.activeKey === (38 || 76)) this.player.entity.position.y -= this.world.tutorial.spriteMap.scalar;
+      if (this.keyboard.activeKey === (39 || 68)) this.player.entity.position.x += this.world.tutorial.spriteMap.scalar;
+      if (this.keyboard.activeKey === (40 || 83)) this.player.entity.position.y += this.world.tutorial.spriteMap.scalar;
+      if (this.keyboard.activeKey === (37 || 65)) this.player.entity.position.x -= this.world.tutorial.spriteMap.scalar;
+
+    }
 
     this.player.canvas.context.clearRect(0, 0, this.player.canvas.width, this.player.canvas.height);
     this.player.canvas.context.fillRect(
