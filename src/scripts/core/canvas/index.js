@@ -17,7 +17,7 @@ class Canvas {
 
     // this._bindFunctions();
 
-    this._id = id;
+    if (id) this._id = id;
 
     /** @type {Boolean} */
     this._isRendered = false;
