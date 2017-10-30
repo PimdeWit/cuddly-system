@@ -21,9 +21,13 @@ export class Game {
     SCALE = window.devicePixelRatio;
 
     this.world = {};
-    this._lastPosition = null;
 
-    this._initialise().then(this.render.bind(this));
+    this._initialise().then(() => {
+
+      setInterval(() => {
+        this.render();
+      }, 1000 / 10);
+    });
   }
 
   async _initialise() {
@@ -50,6 +54,11 @@ export class Game {
       if (tile.colors.r === 159) sprite = sprites[2];
       if (tile.colors.r === 48) sprite = sprites[2];
 
+      if (tile.colors.r === 3) {
+        sprite = sprites[2];
+        this.world.tutorial.collidableTiles.push(tile);
+      }
+
       if (sprite) this.world.tutorial.canvas.context.drawImage(sprite, tile.x, tile.y, tile.width, tile.height);
     });
 
@@ -62,8 +71,6 @@ export class Game {
 
     this.world.tutorial.collidableLayer = new PhysicsLayer(this.world.tutorial.collidableTiles, true);
 
-    console.log(this.world.tutorial.collidableLayer);
-
     this.keyboard = new KeyboardManager();
     this.keyboard.listen();
 
@@ -72,37 +79,36 @@ export class Game {
 
   render() {
     const player = this.world.tutorial.player;
-    let colliding = false;
+    const key = this.keyboard.activeKey;
 
-    requestAnimationFrame(this.render.bind(this));
+    const newPosition = Object.assign({}, player.entity.position);
 
-    this.world.tutorial.collidableLayer.tiles.forEach(tile => {
-      if (player.entity.position.x >= tile.x && player.entity.position.x < tile.x + tile.width &&
-          player.entity.position.y >= tile.y && player.entity.position.y < tile.y + tile.height) {
-        if (this._lastPosition) player.entity.position = this._lastPosition;
-        colliding = true;
-        console.log(this._lastPosition);
-      }
-    });
-
-    if (colliding) this._lastPosition = this.world.tutorial.player.entity.position;
-
-    if (this.keyboard.activeKey) {
+    if (key) {
       console.log(this.keyboard.activeKey);
 
-      if (this.keyboard.activeKey === (38 || 76)) player.entity.position.y -= this.world.tutorial.spriteMap.scalar;
-      if (this.keyboard.activeKey === (39 || 68)) player.entity.position.x += this.world.tutorial.spriteMap.scalar;
-      if (this.keyboard.activeKey === (40 || 83)) player.entity.position.y += this.world.tutorial.spriteMap.scalar;
-      if (this.keyboard.activeKey === (37 || 65)) player.entity.position.x -= this.world.tutorial.spriteMap.scalar;
+      if (key === 38 || key === 87) newPosition.y -= this.world.tutorial.spriteMap.scalar;
+      if (key === 39 || key === 68) newPosition.x += this.world.tutorial.spriteMap.scalar;
+      if (key === 40 || key === 83) newPosition.y += this.world.tutorial.spriteMap.scalar;
+      if (key === 37 || key === 65) newPosition.x -= this.world.tutorial.spriteMap.scalar;
     }
 
-    player.canvas.context.clearRect(0, 0, player.canvas.width, player.canvas.height);
+    const collidedTile = this.world.tutorial.collidableLayer.tiles.find(tile => {
+      return newPosition.x >= tile.x && newPosition.x < tile.x + tile.width &&
+          newPosition.y >= tile.y && newPosition.y < tile.y + tile.height;
+    });
+
+    if (typeof collidedTile === 'undefined') {
+      player.entity.position.x = newPosition.x;
+      player.entity.position.y = newPosition.y;
+    }
+
+    player.canvas.context.clearRect(0, 0, player.canvas.width * 2, player.canvas.height * 2);
     player.canvas.context.fillRect(
         player.entity.position.x,
         player.entity.position.y,
         this.world.tutorial.spriteMap.scalar,
         this.world.tutorial.spriteMap.scalar);
 
+    // requestAnimationFrame(this.render.bind(this));
   }
-
 }
