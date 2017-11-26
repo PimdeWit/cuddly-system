@@ -3,6 +3,81 @@ import {SHELL, SCALE} from '../../game';
 
 class SpriteMap {
   /**
+   * draw an image to a temporary canvas, loop through the pixels, and return an array with the R, G, B, A colour values.
+   * @param {HTMLImageElement} image
+   * @async
+   * @static
+   * @returns {Promise}
+   * @private
+   */
+  static getImagePixelData(image) {
+    return new Promise(resolve => {
+      const canvas = new OffscreenCanvas(image.width, image.height);
+      const context = canvas.getContext('2d');
+
+      context.drawImage(image, 0, 0, image.width, image.height);
+
+      resolve(context.getImageData(0, 0, image.width, image.height));
+    });
+  }
+
+    /**
+     * Create a readable object from a pixelData array
+     * @param {UInt8Array} imageData
+     * @param {Number} tileSize
+     * @async
+     * @static
+     * @returns {Promise}
+     * @private
+     */
+  static generateTiles(imageData, tileSize) {
+    return new Promise(resolve => {
+      const tiles = [];
+
+      const width = imageData.width;
+      const height = imageData.height;
+
+      // The pixelData.data array is a flat array repeating R,G,B,A. e.g Red is displayed as: `[255, 0, 0, 1]`
+      const singleIterationLength = ['r', 'g', 'b', 'a'].length;
+
+      const pixelCount = width * height;
+      const pixels = pixelCount * singleIterationLength;
+
+      let row = 0;
+      let columns = 0;
+
+      for (let i = 0; i < pixels; i += singleIterationLength) {
+        const r = imageData.data[i];
+        const g = imageData.data[i + 1];
+        const b = imageData.data[i + 2];
+        const a = imageData.data[i + 3];
+
+        const tile = {
+          x: columns * tileSize,
+          y: row * tileSize,
+          width: tileSize,
+          height: tileSize,
+          colors: [r, g, b, a]
+        };
+
+        tiles.push(tile);
+
+        columns++;
+
+        // If the cursor is at the last item in a single ROW, then move the cursor x: 0 && y: y++.
+        const setCursorToNewline = (i + singleIterationLength) % (width * singleIterationLength) === 0;
+
+        if (setCursorToNewline) {
+          row++;
+          columns = 0;
+        }
+      }
+
+      resolve(tiles);
+    });
+  }
+
+  /**
    * @param {HTMLCanvasElement} canvas
    * @param {ImageBitmap|HTMLImageElement|Null} image
    */
@@ -43,74 +118,12 @@ class SpriteMap {
    * @async
    * @returns {Promise}
    */
-  async generateMap() {
-    this._imageData = await _generateImageData(this._image);
+  async generateMap(image) {
+    if (image) this._image = image;
+    this._imageData = await SpriteMap.getImagePixelData(this._image);
+    this._scalar = (SHELL.offsetWidth / this._imageData.width) * SCALE;
 
-    this._tiles = await this._generateTiles(this._imageData);
-  }
-
-  /**
-   * Create a readable object from a pixelData array
-   * @param {Object} imageData
-   * @param {Array} imageData.data
-   * @param {Array} imageData.dataUnion
-   * @param {Number} imageData.width
-   * @param {Number} imageData.height
-   * @async
-   * @returns {Promise}
-   * @private
-   */
-  async _generateTiles(imageData) {
-    return new Promise(resolve => {
-      const tiles = [];
-
-      const width = imageData.width;
-      const height = imageData.height;
-
-      this._scalar = (SHELL.offsetWidth / width) * SCALE;
-
-      // The pixelData.data array is a flat array repeating R,G,B,A. e.g Red is displayed as: `[255, 0, 0, 1]`
-      const singleIterationLength = ['r', 'g', 'b', 'a'].length;
-
-      const pixelCount = width * height;
-      const pixels = pixelCount * singleIterationLength;
-
-      let row = 0;
-      let columns = 0;
-
-      for (let i = 0; i < pixels; i += singleIterationLength) {
-        const r = imageData.data[i];
-        const g = imageData.data[i + 1];
-        const b = imageData.data[i + 2];
-        const a = imageData.data[i + 3];
-
-        const tile = {
-          x: columns * this.scalar,
-          y: row * this.scalar,
-          width: this.scalar,
-          height: this.scalar,
-          colors: {
-            r: r,
-            g: g,
-            b: b,
-            a: a
-          }
-        };
-
-        tiles.push(tile);
-
-        columns++;
-
-        const setCursorToNewline = (i + singleIterationLength) % (width * singleIterationLength) === 0;
-
-        if (setCursorToNewline) {
-          row++;
-          columns = 0;
-        }
-      }
-
-      resolve(tiles);
-    });
+    this._tiles = await SpriteMap.generateTiles(this._imageData, this._scalar);
   }
 
   /** @returns {Object} */
@@ -143,21 +156,3 @@ class SpriteMap {
 }
 
 export default SpriteMap;
-
-/**
- * draw an image to a canvas, loop through the pixels, and return an array with the R, G, B, A colour values.
- * @param {HTMLImageElement} image
- * @async
- * @returns {Promise}
- * @private
- */
-export async function _generateImageData(image) {
-  return new Promise(resolve => {
-    const mapDataCanvas = new OffscreenCanvas(image.width, image.height);
-    const mapDataCanvasContext = mapDataCanvas.getContext('2d');
-
-    mapDataCanvasContext.drawImage(image, 0, 0, image.width, image.height);
-
-    resolve(mapDataCanvasContext.getImageData(0, 0, image.width, image.height));
-  });
-}

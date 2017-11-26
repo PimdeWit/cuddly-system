@@ -16,6 +16,7 @@
     "HMR"
   ],
   "dependencies": {
+    "pathfinder": "^0.3.0-1",
     "pepjs": "^0.4.3",
     "webfontloader": "^1.6.28"
   },

@@ -46,15 +46,15 @@ export class Game {
     await this.world.tutorial.spriteMap.generateMap();
     this.world.tutorial.collidableTiles = [];
     this.world.tutorial.spriteMap.tiles.forEach(tile => {
-      if (tile.colors.r === 255) sprite = sprites[0];
-      if (tile.colors.r === 128) {
+      if (tile.colors[0] === 255) sprite = sprites[0];
+      if (tile.colors[0] === 128) {
         sprite = sprites[1];
         this.world.tutorial.collidableTiles.push(tile);
       }
-      if (tile.colors.r === 159) sprite = sprites[2];
-      if (tile.colors.r === 48) sprite = sprites[2];
+      if (tile.colors[0] === 159) sprite = sprites[2];
+      if (tile.colors[0] === 48) sprite = sprites[2];
 
-      if (tile.colors.r === 3) {
+      if (tile.colors[0] === 3) {
         sprite = sprites[2];
         this.world.tutorial.collidableTiles.push(tile);
       }
