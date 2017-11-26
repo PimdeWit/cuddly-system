@@ -5,11 +5,10 @@ class PhysicsLayer {
   /**
    *
    * @param {Array} tiles
-   * @param {Object} options
-   * @param {Boolean} debug Creates a canvas to visually see the collidable tiles.
+   * @param {Boolean} debug Creates a canvas to visually see the collideable tiles.
    * @param {Array} debugColors Array of colours to paint the tiles with. [0] = fill, [1] = stroke.
    */
-  constructor(tiles, debug = false, debugColors = ['rgba(0, 0, 0, 0.3)', 'rgba(0, 0, 0, 0.8)']) {
+  constructor(tiles, debug = false, debugColors = ['rgba(0, 0, 255, 0.9)', 'rgba(0, 255, 0, 0.8)']) {
     this._tiles = tiles;
     this._debug = debug;
 
@@ -59,7 +58,7 @@ class PhysicsLayer {
   }
 
   /**
-   * Visually draw the collidable objects.
+   * Visually draw the collideable objects.
    * @private
    */
   _drawDebugMap() {

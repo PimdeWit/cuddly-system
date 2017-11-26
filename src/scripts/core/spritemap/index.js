@@ -6,7 +6,7 @@ class SpriteMap {
    * draw an image to a temporary canvas, loop through the pixels, and return an array with the R, G, B, A colour values.
    * @param {HTMLImageElement} image
    * @async
-   * @static
+   * @assets
    * @returns {Promise}
    * @private
    */
@@ -23,10 +23,10 @@ class SpriteMap {
 
     /**
      * Create a readable object from a pixelData array
-     * @param {UInt8Array} imageData
+     * @param {UInt8Array|Array} imageData
      * @param {Number} tileSize
      * @async
-     * @static
+     * @assets
      * @returns {Promise}
      * @private
      */
@@ -128,6 +128,7 @@ class SpriteMap {
 
   /** @returns {Object} */
   get tiles() {
+    console.log(this._tiles);
     return this._tiles;
   }
 

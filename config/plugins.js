@@ -47,7 +47,7 @@ module.exports = (isProd, options = {}) => {
   if (isProd) {
     plugins.push(
         new CleanPlugin(['scripts', 'styles', 'images', 'favicon.ico'], {dist}),
-        new CopyPlugin([{context: 'src/static', from: '**/*.*', to: dist}]),
+        new CopyPlugin([{context: 'src/assets', from: '**/*.*', to: dist}]),
         new webpack.LoaderOptionsPlugin({minimize: true, debug: false}),
         new webpack.optimize.UglifyJsPlugin({
           output: {

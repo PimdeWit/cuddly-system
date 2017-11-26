@@ -41,7 +41,7 @@ module.exports = env => {
         {
           test: /\.(ttf|woff|otf|png|svg|jpg)$/,
           use: isProd
-              ? 'file-loader?context=src/static/&name=[path][name].[ext]&outputPath=../../dist/'
+              ? 'file-loader?context=src/assets/&name=[path][name].[ext]&outputPath=../../dist/'
               : 'file-loader'
         },
         {
