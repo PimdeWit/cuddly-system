@@ -23,9 +23,9 @@ export class Game {
 
     this._initialise().then(() => {
 
-      // setInterval(() => {
-      //   this.render();
-      // }, 1000 / 10);
+      setInterval(() => {
+        this.render();
+      }, 1000 / 10);
     });
   }
 
@@ -73,22 +73,22 @@ export class Game {
       if (key === 37 || key === 65) newPosition.x -= this.tutorial._map.scalar;
     }
 
-    const collidedTile = this.tutorial.collidableLayer.tiles.find(tile => {
-      return newPosition.x >= tile.x && newPosition.x < tile.x + tile.width &&
-          newPosition.y >= tile.y && newPosition.y < tile.y + tile.height;
-    });
-
-    if (typeof collidedTile === 'undefined') {
-      player.entity.position.x = newPosition.x;
-      player.entity.position.y = newPosition.y;
-    }
+    // const collidedTile = this.tutorial.tiles.find(tile => {
+    //   return newPosition.x >= tile.x && newPosition.x < tile.x + tile.width &&
+    //       newPosition.y >= tile.y && newPosition.y < tile.y + tile.height;
+    // });
+    //
+    // if (typeof collidedTile === 'undefined') {
+    //   player.entity.position.x = newPosition.x;
+    //   player.entity.position.y = newPosition.y;
+    // }
 
     player.canvas.context.clearRect(0, 0, player.canvas.width * 2, player.canvas.height * 2);
     player.canvas.context.fillRect(
         player.entity.position.x,
         player.entity.position.y,
-        this.tutorial.spriteMap.scalar,
-        this.tutorial.spriteMap.scalar);
+        this.tutorial._map._scalar,
+        this.tutorial._map._scalar);
 
     // requestAnimationFrame(this.render.bind(this));
   }
