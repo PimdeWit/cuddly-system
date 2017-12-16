@@ -10,7 +10,7 @@ const _pendingPromises = {};
  * @returns {Promise}
  * @constructor
  */
-export function load(path) {
+export async function load(path) {
   const blob = _cache[path];
 
   if (blob) {
@@ -18,7 +18,7 @@ export function load(path) {
   } else if (_pendingPromises[path]) {
     return _pendingPromises[path];
   } else {
-    return _fetchFile(path);
+    return await _fetchFile(path);
   }
 }
 
@@ -70,25 +70,22 @@ export function removeAll() {
  * @returns {Promise}
  * @private
  */
-function _fetchFile(path) {
-  const promise = new Promise((resolve, reject) => {
-    fetch(path).then(response => {
-      response.blob().then(blob => {
-        // Remove the promise from the 'pending list' as it is now stored in the cache.
-        delete _pendingPromises[path];
+async function _fetchFile(path) {
+  const response = await fetch(path);
+  const blob = await response.blob();
+  let fileToReturn = null;
 
-        _cache[path] = blob.slice();
+  // Remove the promise from the 'pending list' as it is now stored in the cache.
+  delete _pendingPromises[path];
 
-        if (path.includes('.jpg') || path.includes('.png')) {
-          createImageBitmap(blob).then(newblob => resolve(newblob));
-        }
+  _cache[path] = blob.slice();
 
-      });
-    });
-  });
+  if (path.includes('.jpg') || path.includes('.png')) {
+    fileToReturn = await createImageBitmap(blob);
+  }
 
   // Store the promise in case the same file gets called again before it's able to cache.
-  _pendingPromises[path] = promise;
+  _pendingPromises[path] = fileToReturn;
 
-  return promise;
+  return fileToReturn;
 }
